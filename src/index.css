@@ -3,6 +3,71 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
 
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./assets/fonts/IBMPlexSansArabic-Regular.woff2') format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC;
+}
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./assets/fonts/IBMPlexSansArabic-Regular-Latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./assets/fonts/IBMPlexSansArabic-Medium.woff2') format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC;
+}
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./assets/fonts/IBMPlexSansArabic-Medium-Latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./assets/fonts/IBMPlexSansArabic-SemiBold.woff2') format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC;
+}
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('./assets/fonts/IBMPlexSansArabic-SemiBold-Latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./assets/fonts/IBMPlexSansArabic-Bold.woff2') format('woff2');
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC;
+}
+@font-face {
+  font-family: 'IBM Plex Sans Arabic';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('./assets/fonts/IBMPlexSansArabic-Bold-Latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -36,65 +101,117 @@
     font-size: 16px;
   }
 
-  --background: oklch(1 0 0);
+  /* Base Brand Colors */
+  --color-primary: #0C0A28;
+  --color-secondary: #1190CF;
+  --color-tertiary: #5E6C84;
+  --color-neutral: #F4F8FE;
 
-  --foreground: oklch(0.145 0 0);
+  /* Primary Shades (#0C0A28) */
+  --primary-50: #f3f3f7;
+  --primary-100: #e2e2ec;
+  --primary-200: #c9c7db;
+  --primary-300: #a7a3c3;
+  --primary-400: #807aa7;
+  --primary-500: #625a8e;
+  --primary-600: #4e4475;
+  --primary-700: #3f365f;
+  --primary-800: #30284b;
+  --primary-900: #1b1731;
+  --primary-950: #0c0a28;
 
-  --card: oklch(1 0 0);
+  /* Secondary Shades (#1190CF) */
+  --secondary-50: #f0f9ff;
+  --secondary-100: #e0f2fe;
+  --secondary-200: #bae6fd;
+  --secondary-300: #7dd3fc;
+  --secondary-400: #38bdf8;
+  --secondary-500: #1190cf;
+  --secondary-600: #0284c7;
+  --secondary-700: #0369a1;
+  --secondary-800: #075985;
+  --secondary-900: #0c4a6e;
+  --secondary-950: #082f49;
 
-  --card-foreground: oklch(0.145 0 0);
+  /* Tertiary Shades (#5E6C84) */
+  --tertiary-50: #f4f6f8;
+  --tertiary-100: #e5e8ec;
+  --tertiary-200: #cfd5df;
+  --tertiary-300: #adb7c7;
+  --tertiary-400: #8493ab;
+  --tertiary-500: #5e6c84;
+  --tertiary-600: #4a566d;
+  --tertiary-700: #3d4659;
+  --tertiary-800: #343c4b;
+  --tertiary-900: #2f3441;
+  --tertiary-950: #1d212b;
 
-  --popover: oklch(1 0 0);
+  /* Neutral Shades (#F4F8FE) */
+  --neutral-50: #ffffff;
+  --neutral-100: #f4f8fe;
+  --neutral-200: #e6effc;
+  --neutral-300: #d0e0fa;
+  --neutral-400: #b1cbf7;
+  --neutral-500: #8cb0f2;
+  --neutral-600: #6792eb;
+  --neutral-700: #4f78de;
+  --neutral-800: #3b5ec2;
+  --neutral-900: #294086;
+  --neutral-950: #1a2754;
 
-  --popover-foreground: oklch(0.145 0 0);
+  --background: #F4F8FE;
+  --foreground: #0C0A28;
 
-  --primary: oklch(0.205 0 0);
+  --card: #ffffff;
+  --card-foreground: #0C0A28;
 
-  --primary-foreground: oklch(0.985 0 0);
+  --popover: #ffffff;
+  --popover-foreground: #0C0A28;
 
-  --secondary: oklch(0.97 0 0);
+  --primary: #0C0A28;
+  --primary-foreground: #ffffff;
 
-  --secondary-foreground: oklch(0.205 0 0);
+  --secondary: #1190CF;
+  --secondary-foreground: #ffffff;
 
-  --muted: oklch(0.97 0 0);
+  --tertiary: #5E6C84;
+  --tertiary-foreground: #ffffff;
 
-  --muted-foreground: oklch(0.556 0 0);
+  --neutral: #F4F8FE;
+  --neutral-foreground: #0C0A28;
 
-  --accent-foreground: oklch(0.205 0 0);
+  --muted: #F4F8FE;
+  --muted-foreground: #5E6C84;
+
+  --accent: #1190CF;
+  --accent-foreground: #ffffff;
 
   --destructive: oklch(0.577 0.245 27.325);
 
   --input: oklch(0.922 0 0);
 
-  --ring: oklch(0.708 0 0);
+  --ring: #1190CF;
 
-  --chart-1: oklch(0.87 0 0);
-
-  --chart-2: oklch(0.556 0 0);
-
-  --chart-3: oklch(0.439 0 0);
-
-  --chart-4: oklch(0.371 0 0);
-
-  --chart-5: oklch(0.269 0 0);
+  --chart-1: #0C0A28;
+  --chart-2: #1190CF;
+  --chart-3: #5E6C84;
+  --chart-4: #2A4365;
+  --chart-5: #3182CE;
 
   --radius: 0.625rem;
 
-  --sidebar: oklch(0.985 0 0);
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0C0A28;
 
-  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: #0C0A28;
+  --sidebar-primary-foreground: #ffffff;
 
-  --sidebar-primary: oklch(0.205 0 0);
-
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-
-  --sidebar-accent: oklch(0.97 0 0);
-
-  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-accent: #F4F8FE;
+  --sidebar-accent-foreground: #0C0A28;
 
   --sidebar-border: oklch(0.922 0 0);
 
-  --sidebar-ring: oklch(0.708 0 0)
+  --sidebar-ring: #1190CF;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -118,15 +235,7 @@
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
   min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
 }
 
 body {
@@ -135,7 +244,7 @@ body {
 
 h1,
 h2 {
-  font-family: var(--heading);
+  font-family: inherit;
   font-weight: 500;
   color: var(--text-h);
 }
@@ -179,7 +288,8 @@ code {
 
 @theme inline {
   --font-heading: var(--font-sans);
-  --font-sans: 'Geist Variable', sans-serif;
+  --font-ibm-plex-sans-arabic: 'IBM Plex Sans Arabic', sans-serif;
+  --font-sans: 'IBM Plex Sans Arabic', 'Geist Variable', sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -201,10 +311,61 @@ code {
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
   --color-muted: var(--muted);
+  --color-tertiary-foreground: var(--tertiary-foreground);
+  --color-tertiary: var(--tertiary);
+  --color-tertiary-50: var(--tertiary-50);
+  --color-tertiary-100: var(--tertiary-100);
+  --color-tertiary-200: var(--tertiary-200);
+  --color-tertiary-300: var(--tertiary-300);
+  --color-tertiary-400: var(--tertiary-400);
+  --color-tertiary-500: var(--tertiary-500);
+  --color-tertiary-600: var(--tertiary-600);
+  --color-tertiary-700: var(--tertiary-700);
+  --color-tertiary-800: var(--tertiary-800);
+  --color-tertiary-900: var(--tertiary-900);
+  --color-tertiary-950: var(--tertiary-950);
+
+  --color-neutral-foreground: var(--neutral-foreground);
+  --color-neutral: var(--neutral);
+  --color-neutral-50: var(--neutral-50);
+  --color-neutral-100: var(--neutral-100);
+  --color-neutral-200: var(--neutral-200);
+  --color-neutral-300: var(--neutral-300);
+  --color-neutral-400: var(--neutral-400);
+  --color-neutral-500: var(--neutral-500);
+  --color-neutral-600: var(--neutral-600);
+  --color-neutral-700: var(--neutral-700);
+  --color-neutral-800: var(--neutral-800);
+  --color-neutral-900: var(--neutral-900);
+  --color-neutral-950: var(--neutral-950);
+
   --color-secondary-foreground: var(--secondary-foreground);
   --color-secondary: var(--secondary);
+  --color-secondary-50: var(--secondary-50);
+  --color-secondary-100: var(--secondary-100);
+  --color-secondary-200: var(--secondary-200);
+  --color-secondary-300: var(--secondary-300);
+  --color-secondary-400: var(--secondary-400);
+  --color-secondary-500: var(--secondary-500);
+  --color-secondary-600: var(--secondary-600);
+  --color-secondary-700: var(--secondary-700);
+  --color-secondary-800: var(--secondary-800);
+  --color-secondary-900: var(--secondary-900);
+  --color-secondary-950: var(--secondary-950);
+
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  --color-primary-50: var(--primary-50);
+  --color-primary-100: var(--primary-100);
+  --color-primary-200: var(--primary-200);
+  --color-primary-300: var(--primary-300);
+  --color-primary-400: var(--primary-400);
+  --color-primary-500: var(--primary-500);
+  --color-primary-600: var(--primary-600);
+  --color-primary-700: var(--primary-700);
+  --color-primary-800: var(--primary-800);
+  --color-primary-900: var(--primary-900);
+  --color-primary-950: var(--primary-950);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -257,7 +418,14 @@ code {
 @layer base {
   * {
     @apply border-border outline-ring/50;}
+  html,
   body {
-    @apply bg-background text-foreground;}
-  html {
-    @apply font-sans;}}
+    @apply bg-background text-foreground font-ibm-plex-sans-arabic;
+  }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 320ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
