@@ -148,7 +148,7 @@ export const AboutSection = () => {
             <FormattedMessage id="about.kicker" />
           </motion.div>
           <motion.h2
-            className="mb-5 text-3xl font-semibold leading-tight text-primary sm:text-4xl lg:text-[2.5rem]"
+            className="mb-5 text-3xl font-semibold leading-tight text-[#0C0A28] sm:text-4xl lg:text-[2.5rem]"
             variants={fadeUp}
           >
             <FormattedMessage id="about.title" />

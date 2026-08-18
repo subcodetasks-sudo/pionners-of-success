@@ -41,7 +41,7 @@ export const GalleryPage = () => {
     <div className="bg-white">
       <Container className="py-20">
         <div className="mx-auto my-10 max-w-3xl text-center">
-          <h1 className="text-4xl font-semibold text-primary sm:text-5xl">
+          <h1 className="text-4xl font-semibold text-[#0C0A28] sm:text-5xl">
             <FormattedMessage id="gallery.page.title" />
           </h1>
           <p className="mt-5 text-base leading-8 text-tertiary-600 sm:text-lg">

@@ -41,7 +41,7 @@ export const EventsSection = () => {
             <p className="text-base font-semibold tracking-[0.28em] text-secondary-600 uppercase sm:text-lg">
               <FormattedMessage id="events.kicker" />
             </p>
-            <h2 className="mt-3 text-4xl font-semibold text-primary sm:text-5xl">
+            <h2 className="mt-3 text-4xl font-semibold text-[#0C0A28] sm:text-5xl">
               <FormattedMessage id="events.title" />
             </h2>
           </div>

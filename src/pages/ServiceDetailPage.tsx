@@ -133,7 +133,7 @@ export const ServiceDetailPage = () => {
             <FormattedMessage id="services.kicker" />
           </div>
 
-          <h1 className="mt-4 text-4xl font-semibold text-primary sm:text-5xl">
+          <h1 className="mt-4 text-4xl font-semibold text-[#0C0A28] sm:text-5xl">
             <FormattedMessage id={service.titleKey} />
           </h1>
 
@@ -146,7 +146,7 @@ export const ServiceDetailPage = () => {
           </p>
 
           <div className="mt-8 space-y-3 rounded-[28px] border border-primary-100 bg-white p-6 shadow-[0_18px_45px_rgba(12,10,40,0.06)]">
-            <h2 className="text-lg font-semibold text-primary">{fakeContent.highlightTitle}</h2>
+            <h2 className="text-lg font-semibold text-[#0C0A28]">{fakeContent.highlightTitle}</h2>
             <ul className="space-y-3 text-sm text-tertiary-700">
               {fakeContent.highlights.map((item) => (
                 <li key={item} className="flex items-start gap-3">
@@ -174,7 +174,7 @@ export const ServiceDetailPage = () => {
 
       <section className="mt-16 grid gap-6 lg:grid-cols-2">
         <div className="rounded-[28px] border border-primary-100 bg-white p-6 shadow-[0_18px_45px_rgba(12,10,40,0.06)] sm:p-8">
-          <h2 className="text-2xl font-semibold text-primary">{fakeContent.deliverablesTitle}</h2>
+          <h2 className="text-2xl font-semibold text-[#0C0A28]">{fakeContent.deliverablesTitle}</h2>
           <div className="mt-6 grid gap-4">
             {fakeContent.deliverables.map((item, index) => (
               <div key={item} className="rounded-[22px] bg-primary-50/55 p-4">
@@ -188,7 +188,7 @@ export const ServiceDetailPage = () => {
         </div>
 
         <div className="rounded-[28px] border border-primary-100 bg-white p-6 shadow-[0_18px_45px_rgba(12,10,40,0.06)] sm:p-8">
-          <h2 className="text-2xl font-semibold text-primary">{fakeContent.processTitle}</h2>
+          <h2 className="text-2xl font-semibold text-[#0C0A28]">{fakeContent.processTitle}</h2>
           <div className="mt-6 space-y-4">
             {fakeContent.process.map((step, index) => (
               <div key={step.title} className="flex gap-4 rounded-[22px] bg-white ring-1 ring-primary-100 p-4">
