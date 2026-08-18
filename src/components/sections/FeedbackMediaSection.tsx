@@ -1,5 +1,3 @@
-import { FormattedMessage } from 'react-intl'
-import { Play } from 'lucide-react'
 import { Container } from '@/components/layout/Container'
 import { SectionHeading } from '@/components/layout/SectionHeading'
 
