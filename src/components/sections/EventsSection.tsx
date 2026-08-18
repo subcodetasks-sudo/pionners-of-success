@@ -10,6 +10,7 @@ export const EventsSection = () => {
     <section id="events" className="scroll-mt-24 py-16">
       <Container>
         <SectionHeading kicker="events.kicker" title="events.title" />
+
         <div className="grid gap-4 lg:grid-cols-3">
           {items.map((n) => (
             <article
@@ -19,17 +20,84 @@ export const EventsSection = () => {
               <p className="text-sm text-secondary-600">
                 <FormattedMessage id={`events.item${n}.meta`} />
               </p>
+
               <h3 className="mt-2 text-lg font-medium text-primary">
                 <FormattedMessage id={`events.item${n}.title`} />
               </h3>
+
               <p className="mt-2 flex-1 text-sm text-tertiary-600">
                 <FormattedMessage id={`events.item${n}.body`} />
               </p>
-              <Button className="mt-5 w-fit px-3" size="sm" variant="secondary">
+
+              <Button
+                className="mt-5 w-fit px-3"
+                size="sm"
+                variant="secondary"
+              >
                 <FormattedMessage id="events.cta" />
               </Button>
             </article>
           ))}
+        </div>
+
+        {/* الصور والفيديوهات */}
+        <div className="mt-10 grid gap-6 lg:grid-cols-3">
+          
+          {/* الفيديو الأول */}
+          <div className="overflow-hidden rounded-2xl border border-primary-100 bg-white">
+            <div className="aspect-video bg-black">
+              <video
+                controls
+                className="h-full w-full object-cover"
+              >
+                <source
+                  src="/event-video1.mp4"
+                  type="video/mp4"
+                />
+                المتصفح لا يدعم تشغيل الفيديو
+              </video>
+            </div>
+
+            <p className="p-4 text-sm text-tertiary-600">
+              <FormattedMessage id="events.media1.description" />
+            </p>
+          </div>
+
+          {/* الصورة */}
+          <div className="overflow-hidden rounded-2xl border border-primary-100 bg-white">
+            <div className="aspect-video">
+              <img
+                src="/public/imgs/sponsers/al-ahli-club.webp"
+                alt="Event"
+                className="h-full w-full object-cover"
+              />
+            </div>
+
+            <p className="p-4 text-sm text-tertiary-600">
+              <FormattedMessage id="events.media2.description" />
+            </p>
+          </div>
+
+          {/* الفيديو الثاني */}
+          <div className="overflow-hidden rounded-2xl border border-primary-100 bg-white">
+            <div className="aspect-video bg-black">
+              <video
+                controls
+                className="h-full w-full object-cover"
+              >
+                <source
+                  src="/event-video2.mp4"
+                  type="video/mp4"
+                />
+                المتصفح لا يدعم تشغيل الفيديو
+              </video>
+            </div>
+
+            <p className="p-4 text-sm text-tertiary-600">
+              <FormattedMessage id="events.media3.description" />
+            </p>
+          </div>
+
         </div>
       </Container>
     </section>

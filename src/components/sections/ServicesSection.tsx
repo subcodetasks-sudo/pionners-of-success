@@ -19,7 +19,7 @@ export const ServicesSection = ({ limit, showViewAll = true }: ServicesSectionPr
   const items = limit ? services.slice(0, limit) : services
 
   return (
-    <section id="services" className="scroll-mt-24 bg-white py-16">
+    <section id="services" className="scroll-mt-30  bg-white pt-24 pb-18">
       <Container>
         <SectionHeading
           kicker="services.kicker"

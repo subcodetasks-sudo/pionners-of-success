@@ -44,6 +44,7 @@ export const Header = () => {
   const isServicesRoute = pathname.includes('/services')
   const isGalleryRoute = pathname.includes('/gallery')
   const [activeSection, setActiveSection] = useState<SectionId>(isServicesRoute ? 'services' : 'home')
+  const [servicesMenuOpen, setServicesMenuOpen] = useState(false)
   const cardNavItems = useMemo(
     () => [
       {
@@ -192,56 +193,87 @@ export const Header = () => {
 
             if (item.section === 'services') {
               return (
-                <NavigationMenu key={item.id} className="flex-none">
-                  <NavigationMenuList>
-                    <NavigationMenuItem>
-                      <NavigationMenuTrigger
-                        className={cn(
-                          'h-auto bg-transparent px-0 py-0 text-sm font-normal hover:bg-transparent focus:bg-transparent data-open:bg-transparent data-open:hover:bg-transparent data-popup-open:bg-transparent data-popup-open:hover:bg-transparent',
-                          linkClass,
-                        )}
-                      >
-                        <FormattedMessage id={item.id} />
-                      </NavigationMenuTrigger>
-                      <NavigationMenuContent>
-                        <ul className="grid w-80 gap-1">
-                          <li>
-                            <NavigationMenuLink
-                              render={
-                                <Link to={href} viewTransition={true} />
-                              }
-                              className="flex-col items-start gap-0.5"
-                            >
-                              <span className="font-medium text-primary">
-                                <FormattedMessage id="services.viewAll" />
-                              </span>
-                            </NavigationMenuLink>
-                          </li>
-                          {services.map((service) => (
-                            <li key={service.slug}>
-                              <NavigationMenuLink
-                                render={
-                                  <Link
-                                    to={getLocalizedPath(`/services/${service.slug}`, currentLocale)}
-                                    viewTransition={true}
-                                  />
-                                }
-                                className="flex-col items-start gap-0.5"
-                              >
-                                <span className="font-medium text-primary">
-                                  <FormattedMessage id={service.titleKey} />
-                                </span>
-                                <span className="text-xs text-tertiary-600">
-                                  <FormattedMessage id={service.summaryKey} />
-                                </span>
-                              </NavigationMenuLink>
-                            </li>
-                          ))}
-                        </ul>
-                      </NavigationMenuContent>
-                    </NavigationMenuItem>
-                  </NavigationMenuList>
-                </NavigationMenu>
+
+
+                
+<NavigationMenu
+  key={item.id}
+  className="flex-none"
+  value={servicesMenuOpen ? 'services' : undefined}
+  onValueChange={(value) => {
+    setServicesMenuOpen(value === 'services')
+  }}
+>
+  <NavigationMenuList>
+    <NavigationMenuItem value="services">
+    <NavigationMenuTrigger
+  onPointerMove={(e) => {
+    e.preventDefault()
+  }}
+  onPointerEnter={(e) => {
+    e.preventDefault()
+  }}
+  className={cn(
+    'h-auto bg-transparent px-0 py-0 text-sm font-normal hover:bg-transparent focus:bg-transparent data-open:bg-transparent data-open:hover:bg-transparent data-popup-open:bg-transparent data-popup-open:hover:bg-transparent',
+    linkClass,
+  )}
+>
+  <FormattedMessage id={item.id} />
+</NavigationMenuTrigger>
+
+      <NavigationMenuContent>
+        <ul className="grid w-80 gap-1">
+          <li>
+            <NavigationMenuLink
+              render={
+                <Link
+                  to={href}
+                  viewTransition={true}
+                  onClick={() => setServicesMenuOpen(false)}
+                />
+              }
+              className="flex-col items-start gap-0.5"
+            >
+              <span className="font-medium text-primary">
+                <FormattedMessage id="services.viewAll" />
+              </span>
+            </NavigationMenuLink>
+          </li>
+
+          {services.map((service) => (
+            <li key={service.slug}>
+              <NavigationMenuLink
+                render={
+                  <Link
+                    to={getLocalizedPath(
+                      `/services/${service.slug}`,
+                      currentLocale,
+                    )}
+                    viewTransition={true}
+                    onClick={() => setServicesMenuOpen(false)}
+                  />
+                }
+                className="flex-col items-start gap-0.5"
+              >
+                <span className="font-medium text-primary">
+                  <FormattedMessage id={service.titleKey} />
+                </span>
+
+                <span className="text-xs text-tertiary-600">
+                  <FormattedMessage id={service.summaryKey} />
+                </span>
+              </NavigationMenuLink>
+            </li>
+          ))}
+        </ul>
+      </NavigationMenuContent>
+    </NavigationMenuItem>
+  </NavigationMenuList>
+</NavigationMenu>
+
+
+
+
               )
             }
 

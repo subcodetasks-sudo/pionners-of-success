@@ -29,7 +29,7 @@ export const en = {
   'about.kicker': 'About us',
   'about.title': 'A partner for people who want to lead, not wait.',
   'about.body':
-    'Pioneers of Success helps professionals and organizations unlock performance through practical learning, coaching, and strategy. We combine human development with business outcomes so growth is visible, not theoretical.',
+    'We help professionals and organizations launch professional learning, training, consulting, and strategic development programs. We connect human development with business results to ensure clear and measurable growth. Our philosophy is built on the belief that sustainable organizational growth can only be achieved through a scientific methodology that combines precise planning with innovative solutions. We work as an integrated marketing arm, ensuring our clients build a strong and impactful presence in competitive markets.',
   'about.stat1.value': '12+',
   'about.stat1.label': 'Years of practice',
   'about.stat2.value': '180+',
@@ -42,8 +42,6 @@ export const en = {
   'services.subtitle': 'Choose a path, then open the details page for outcomes, format, and who it is for.',
   'services.viewAll': 'View all services',
   'services.viewDetails': 'View details',
-  'services.page.title': 'Our services',
-  'services.page.subtitle': 'Every offering can later become a richer experience. This is the structural mockup.',
   'services.back': 'Back to services',
   'services.notFound': 'This service could not be found.',
 
@@ -91,7 +89,9 @@ export const en = {
   'events.item3.title': 'Pioneers forum',
   'events.item3.meta': 'Dubai · 18 Oct 2026',
   'events.item3.body': 'A community day of talks, peer circles, and case conversations with alumni.',
-
+'events.media1.description': 'Write the description for the first video here.',
+'events.media2.description': 'Write the description for the image here.',
+'events.media3.description': 'Write the description for the second video here.',
   'feedback.kicker': 'Client feedback',
   'feedback.title': 'What partners say in their own words',
   'feedback.item1.quote':
