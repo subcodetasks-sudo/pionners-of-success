@@ -1,6 +1,5 @@
 import { AboutSection } from '@/components/sections/AboutSection'
 import { EventsSection } from '@/components/sections/EventsSection'
-import { FeedbackMediaSection } from '@/components/sections/FeedbackMediaSection'
 import { FeedbackTextSection } from '@/components/sections/FeedbackTextSection'
 import { HeroSection } from '@/components/sections/HeroSection'
 import { ServicesSection } from '@/components/sections/ServicesSection'
@@ -13,11 +12,10 @@ export const HomePage = () => {
       <HeroSection />
       <SponsorsSection />
       <AboutSection />
-      <ServicesSection limit={3} />
+      <ServicesSection limit={4} />
       <UspSection />
       <EventsSection />
       <FeedbackTextSection />
-      <FeedbackMediaSection />
     </>
   )
 }

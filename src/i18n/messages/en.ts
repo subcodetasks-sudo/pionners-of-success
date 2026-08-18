@@ -30,6 +30,16 @@ export const en = {
   'about.title': 'A partner for people who want to lead, not wait.',
   'about.body':
     'We help professionals and organizations launch professional learning, training, consulting, and strategic development programs. We connect human development with business results to ensure clear and measurable growth. Our philosophy is built on the belief that sustainable organizational growth can only be achieved through a scientific methodology that combines precise planning with innovative solutions. We work as an integrated marketing arm, ensuring our clients build a strong and impactful presence in competitive markets.',
+  'about.vision.kicker': 'Our vision',
+  'about.vision.title': 'Pioneers creating success everywhere',
+  'about.vision.body':
+    'We aspire for every person and organization to turn ambition into tangible results—through a learning environment that inspires creativity and transforms knowledge into real impact in society and the market.',
+  'about.vision.imageAlt': 'Image representing Pioneers of Success vision',
+  'about.message.kicker': 'Our message',
+  'about.message.title': 'Empowering people toward stronger organizations',
+  'about.message.body':
+    'We deliver training, coaching, and consulting built on a scientific methodology that blends field expertise with innovative solutions—helping our clients build a strong, influential presence in their markets.',
+  'about.message.imageAlt': 'Image representing Pioneers of Success message',
   'about.stat1.value': '12+',
   'about.stat1.label': 'Years of practice',
   'about.stat2.value': '180+',
@@ -65,6 +75,10 @@ export const en = {
   'service.influencerMarketing.summary': 'Activating partnerships with opinion leaders aligned with brand values.',
   'service.influencerMarketing.body':
     'Activating partnerships with key opinion leaders and influencers that align seamlessly with commercial brand values.',
+  'service.strategicConsulting.title': 'Strategic Consulting',
+  'service.strategicConsulting.summary': 'Crafting growth roadmaps that connect organizational goals to measurable outcomes.',
+  'service.strategicConsulting.body':
+    'Providing strategic advisory and consulting services that help organizations define clear goals, build execution plans, and achieve sustainable growth through precise methodology and innovative thinking.',
 
   'usp.kicker': 'Why us',
   'usp.title': 'What makes the experience different',
@@ -78,7 +92,7 @@ export const en = {
   'usp.item4.body': 'We respect culture and context, then install habits that survive the workshop week.',
 
   'events.kicker': 'Events',
-  'events.title': 'Upcoming gatherings',
+  'events.title': 'Our events and gatherings',
   'events.cta': 'Reserve a seat',
   'events.item1.title': 'Leading through change',
   'events.item1.meta': 'Amman · 12 Sep 2026',
@@ -89,6 +103,12 @@ export const en = {
   'events.item3.title': 'Pioneers forum',
   'events.item3.meta': 'Dubai · 18 Oct 2026',
   'events.item3.body': 'A community day of talks, peer circles, and case conversations with alumni.',
+  'events.item4.title': 'Creative campaign lab',
+  'events.item4.meta': 'Riyadh · 2 Nov 2026',
+  'events.item4.body': 'A practical session for building clearer, more effective campaigns from idea to measurement.',
+  'events.item5.title': 'Designing digital platforms',
+  'events.item5.meta': 'Cairo · 14 Nov 2026',
+  'events.item5.body': 'An intensive day for marketing and product teams focused on digital experience and brand messaging.',
 'events.media1.description': 'Write the description for the first video here.',
 'events.media2.description': 'Write the description for the image here.',
 'events.media3.description': 'Write the description for the second video here.',

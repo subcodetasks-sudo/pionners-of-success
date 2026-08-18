@@ -12,7 +12,7 @@ export const Footer = () => {
 
   return (
     <footer className="border-t border-primary-900/20 bg-primary text-primary-100">
-      <Container className="grid gap-8 py-12 sm:grid-cols-2 lg:grid-cols-3">
+      <Container className="grid gap-8 py-12 sm:grid-cols-2 lg:grid-cols-3 items-end">
         <div>
           <Link to={getLocalizedPath('/', locale)} className="mb-3 flex items-center gap-2" viewTransition={true}>
             <img src={logo} alt="" className="size-9" />

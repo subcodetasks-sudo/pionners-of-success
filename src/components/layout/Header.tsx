@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Globe } from 'lucide-react'
+import { motion, useReducedMotion } from 'motion/react'
 import { FaWhatsapp } from 'react-icons/fa6'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Link, useLocation } from 'react-router-dom'
@@ -35,8 +36,14 @@ const navItems = [
 /** International digits only, no + or spaces. Example: 9627XXXXXXXX */
 const WHATSAPP_NUMBER = ''
 
+const navFromTop = {
+  duration: 0.7,
+  ease: [0.22, 1, 0.36, 1] as const,
+}
+
 export const Header = () => {
   const intl = useIntl()
+  const reduceMotion = useReducedMotion()
   const { pathname, hash } = useLocation()
   const currentLocale: Locale = pathname.startsWith('/en') ? 'en' : DEFAULT_LOCALE
   const nextLocale: Locale = currentLocale === 'en' ? 'ar' : 'en'
@@ -126,7 +133,12 @@ export const Header = () => {
 
   return (
     <>
-      <div className="fixed top-2 right-2 left-2 z-40 md:hidden">
+      <motion.div
+        className="fixed top-2 right-2 left-2 z-40 md:hidden"
+        initial={reduceMotion ? false : { y: '-120%', opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={navFromTop}
+      >
         <CardNav
           logo={logo}
           logoAlt={intl.formatMessage({ id: 'brand.name' })}
@@ -156,8 +168,13 @@ export const Header = () => {
             </Link>
           }
         />
-      </div>
-      <header className="fixed top-2 right-2 left-2 z-40 hidden rounded-full border border-primary-100/80 bg-white/90 shadow-md [view-transition-name:site-header] backdrop-blur md:block">
+      </motion.div>
+      <motion.header
+        className="fixed top-2 right-2 left-2 z-40 hidden rounded-full border border-primary-100/80 bg-white/90 shadow-md [view-transition-name:site-header] backdrop-blur md:block"
+        initial={reduceMotion ? false : { y: '-120%', opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={navFromTop}
+      >
       <Container className="grid h-14 max-w-none grid-cols-[1fr_auto_1fr] items-center gap-4 p-1 px-1 sm:px-1 lg:px-1">
         <Link
           to={getLocalizedPath('/', currentLocale)}
@@ -326,7 +343,7 @@ export const Header = () => {
           </a>
         </div>
       </Container>
-    </header>
+    </motion.header>
     </>
   )
 }

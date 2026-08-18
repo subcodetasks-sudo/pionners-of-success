@@ -1,6 +1,7 @@
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Link, useLocation } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
+import { motion, useReducedMotion, type Variants } from 'motion/react'
 import logo from '@/assets/Logo.webp'
 import CountUp from '@/components/CountUp'
 import Grainient from '@/components/Grainient'
@@ -9,6 +10,24 @@ import { buttonVariants } from '@/components/ui/button'
 import { DEFAULT_LOCALE, type Locale } from '@/i18n/locales'
 import { getLocalizedPath } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
+
+const ease = [0.22, 1, 0.36, 1] as const
+
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 28 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.55, ease },
+  },
+}
+
+const stagger: Variants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.14, delayChildren: 0.28 },
+  },
+}
 
 const stats = [
   { to: 12, labelId: 'about.stat1.label' },
@@ -20,6 +39,7 @@ export const HeroSection = () => {
   const intl = useIntl()
   const { pathname } = useLocation()
   const locale: Locale = pathname.startsWith('/en') ? 'en' : DEFAULT_LOCALE
+  const reduceMotion = useReducedMotion()
 
   return (
     <section id="home" className="relative flex min-h-dvh scroll-mt-24 items-center overflow-hidden">
@@ -42,55 +62,73 @@ export const HeroSection = () => {
         aria-hidden
       />
       <Container className="relative z-10 flex w-full flex-col items-center py-24 text-center">
-        <img
-          src={logo}
-          alt={intl.formatMessage({ id: 'brand.name' })}
-          className="h-20 w-auto sm:h-25"
-        />
-        <h1 className="mb-4 max-w-3xl text-4xl leading-tight !text-primary sm:text-5xl">
-          <FormattedMessage id="hero.title" />
-        </h1>
-        <p className="max-w-xl text-base text-primary-800 sm:text-lg">
-          <FormattedMessage id="hero.subtitle" />
-        </p>
-        <div className="mt-12 flex flex-wrap justify-center gap-3">
-          <Link
-            to={getLocalizedPath('/services', locale)}
-            className={cn(
-              buttonVariants({ size: 'lg' }),
-              'h-11 gap-2 rounded-full border-secondary-300 bg-secondary-200 px-6 text-primary-950 hover:bg-secondary-300 hover:text-primary-950',
-            )}
-            viewTransition={true}
+        <motion.div
+          className="flex w-full flex-col items-center"
+          initial={reduceMotion ? false : 'hidden'}
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.25 }}
+          variants={stagger}
+        >
+          <motion.img
+            src={logo}
+            alt={intl.formatMessage({ id: 'brand.name' })}
+            className="h-20 w-auto sm:h-25"
+            variants={fadeUp}
+          />
+          <motion.h1
+            className="mb-4 max-w-3xl text-4xl leading-tight !text-primary sm:text-5xl"
+            variants={fadeUp}
           >
-            <FormattedMessage id="hero.cta.primary" />
-            <ArrowRight className="size-4 rtl:rotate-180" />
-          </Link>
-          <a
-            href={`${getLocalizedPath('/', locale)}#events`}
-            className={cn(
-              buttonVariants({ variant: 'outline', size: 'lg' }),
-              'h-11 gap-2 rounded-full border-primary-300 bg-white/40 px-6 text-primary-950 backdrop-blur-sm hover:bg-primary-50 hover:text-primary-950',
-            )}
+            <FormattedMessage id="hero.title" />
+          </motion.h1>
+          <motion.p
+            className="max-w-xl text-base text-primary-800 sm:text-lg"
+            variants={fadeUp}
           >
-            <FormattedMessage id="hero.cta.secondary" />
-          </a>
-        </div>
+            <FormattedMessage id="hero.subtitle" />
+          </motion.p>
+          <motion.div className="mt-12 flex flex-wrap justify-center gap-3" variants={fadeUp}>
+            <Link
+              to={getLocalizedPath('/services', locale)}
+              className={cn(
+                buttonVariants({ size: 'lg' }),
+                'h-11 gap-2 rounded-full border-secondary-300 bg-secondary-200 px-6 text-primary-950 hover:bg-secondary-300 hover:text-primary-950',
+              )}
+              viewTransition={true}
+            >
+              <FormattedMessage id="hero.cta.primary" />
+              <ArrowRight className="size-4 rtl:rotate-180" />
+            </Link>
+            <a
+              href={`${getLocalizedPath('/', locale)}#events`}
+              className={cn(
+                buttonVariants({ variant: 'outline', size: 'lg' }),
+                'h-11 gap-2 rounded-full border-primary-300 bg-white/40 px-6 text-primary-950 backdrop-blur-sm hover:bg-primary-50 hover:text-primary-950',
+              )}
+            >
+              <FormattedMessage id="hero.cta.secondary" />
+            </a>
+          </motion.div>
 
-        <div className="mt-12 h-px w-16 bg-primary-300" aria-hidden />
+          
 
-        <div className="mt-10 flex w-full max-w-3xl flex-wrap items-start justify-center gap-8 sm:gap-12">
-          {stats.map((stat) => (
-            <div key={stat.labelId} className="min-w-28">
-              <p className="text-3xl font-semibold tracking-tight text-primary-950 sm:text-4xl">
-                <CountUp to={stat.to} duration={1.6} />
-                <span>+</span>
-              </p>
-              <p className="mt-1 text-sm text-primary-800">
-                <FormattedMessage id={stat.labelId} />
-              </p>
-            </div>
-          ))}
-        </div>
+          <motion.div
+            className="mt-10 flex w-full max-w-3xl flex-wrap items-start justify-center gap-8 sm:gap-12"
+            variants={fadeUp}
+          >
+            {stats.map((stat) => (
+              <div key={stat.labelId} className="min-w-28">
+                <p className="text-3xl font-semibold tracking-tight text-primary-950 sm:text-4xl">
+                  <CountUp to={stat.to} duration={1.6} />
+                  <span>+</span>
+                </p>
+                <p className="mt-1 text-sm text-primary-800">
+                  <FormattedMessage id={stat.labelId} />
+                </p>
+              </div>
+            ))}
+          </motion.div>
+        </motion.div>
       </Container>
     </section>
   )
