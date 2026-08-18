@@ -1,6 +1,7 @@
-import { useLayoutEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
-import DriftWall, { type DriftWallItem } from '@/components/DriftWall'
+import AccordionGallery, { type AccordionGalleryItem } from '@/components/AccordionGallery'
+import { Container } from '@/components/layout/Container'
 import {
   Dialog,
   DialogContent,
@@ -9,87 +10,25 @@ import {
 } from '@/components/ui/dialog'
 
 const placeholderImages = [
-  '/imgs/sponsers/samsung.webp',
-  '/imgs/sponsers/honor.webp',
-  '/imgs/sponsers/nahdi.webp',
-  '/imgs/sponsers/centrepoint.webp',
-  '/imgs/sponsers/shein.webp',
-  '/imgs/sponsers/trendyol.png',
-  '/imgs/sponsers/faces.webp',
-  '/imgs/sponsers/the-body-shop.webp',
-  '/imgs/sponsers/chuck-e-cheese.webp',
-  '/imgs/sponsers/tim-hortons.png',
-  '/imgs/sponsers/gap.webp',
-  '/imgs/sponsers/skechers.webp',
+  '/imgs/services/brand-identity.webp',
+  '/imgs/services/digital-platforms.webp',
+  '/imgs/services/ad-campaigns.webp',
+  '/imgs/services/content-production.webp',
+  '/imgs/services/influencer-marketing.webp',
 ] as const
 
-type WallLayout = {
-  columns: number
-  tileWidth: number
-  tileHeight: number
-  gap: number
-  scale: number
-  tilt: number
-  turn: number
-  depth: number
-  fade: number
-}
-
-const getWallLayout = (width: number): WallLayout => {
-  if (width < 640) {
-    return {
-      columns: 2,
-      tileWidth: 118,
-      tileHeight: 88,
-      gap: 10,
-      scale: 1.55,
-      tilt: 8,
-      turn: -6,
-      depth: 40,
-      fade: 0.2,
-    }
-  }
-  if (width < 1024) {
-    return {
-      columns: 4,
-      tileWidth: 170,
-      tileHeight: 118,
-      gap: 14,
-      scale: 1.7,
-      tilt: 10,
-      turn: -8,
-      depth: 60,
-      fade: 0.22,
-    }
-  }
-  return {
-    columns: 8,
-    tileWidth: 170,
-    tileHeight: 114,
-    gap: 14,
-    scale: 1.85,
-    tilt: 10,
-    turn: -8,
-    depth: 70,
-    fade: 0.18,
-  }
+type GalleryItem = AccordionGalleryItem & {
+  title: string
 }
 
 export const GalleryPage = () => {
   const intl = useIntl()
-  const [selected, setSelected] = useState<DriftWallItem | null>(null)
-  const [layout, setLayout] = useState<WallLayout>(() =>
-    getWallLayout(typeof window === 'undefined' ? 1280 : window.innerWidth),
-  )
+  const [selected, setSelected] = useState<AccordionGalleryItem | null>(null)
+  const introText = intl.locale.startsWith('ar')
+    ? 'نظرة بصرية سريعة على بعض الأعمال والمخرجات الإبداعية التي تعكس أسلوبنا في بناء التجارب، وصناعة المحتوى، وتقديم الحلول بصورة أوضح وأكثر تأثيرًا.'
+    : 'A visual snapshot of selected work and creative outputs that reflect how we shape experiences, build content, and present ideas more clearly and effectively.'
 
-  useLayoutEffect(() => {
-    const update = () => setLayout(getWallLayout(window.innerWidth))
-    update()
-    window.addEventListener('resize', update)
-    return () => window.removeEventListener('resize', update)
-  }, [])
-
-  const items = useMemo<DriftWallItem[]>(
+  const items = useMemo<GalleryItem[]>(
     () =>
       placeholderImages.map((image, index) => ({
         image,
@@ -99,28 +38,94 @@ export const GalleryPage = () => {
   )
 
   return (
-    <div className="relative h-dvh overflow-hidden bg-white">
-      <DriftWall
-        items={items}
-        className="h-full"
-        columns={layout.columns}
-        tileWidth={layout.tileWidth}
-        tileHeight={layout.tileHeight}
-        gap={layout.gap}
-        scale={layout.scale}
-        tilt={layout.tilt}
-        turn={layout.turn}
-        depth={layout.depth}
-        fade={layout.fade}
-        overlayColor="transparent"
-        tileBackground="#ffffff"
-        imageFit="contain"
-        dim={1}
-        grayscale={false}
-        onItemClick={(item) => {
-          window.setTimeout(() => setSelected(item), 0)
-        }}
-      />
+    <div className="bg-white">
+      <Container className="py-20">
+        <div className="mx-auto my-10 max-w-3xl text-center">
+          <h1 className="text-4xl font-semibold text-primary sm:text-5xl">
+            <FormattedMessage id="gallery.page.title" />
+          </h1>
+          <p className="mt-5 text-base leading-8 text-tertiary-600 sm:text-lg">
+            {introText}
+          </p>
+        </div>
+<div className='space-y-10'>
+        <AccordionGallery
+          items={items.map((item) => ({
+            image: item.image,
+            label: item.title,
+            alt: item.title,
+          }))}
+          defaultIndex={0}
+          expandRatio={0.52}
+          trigger="hover"
+          accentColor="#1190CF"
+          overlayColor="#0C0A28"
+          textColor="#ffffff"
+          radius={24}
+          gap={12}
+          height={520}
+          onItemClick={(_, index) => {
+            const next = items[index]
+            if (!next) return
+            setSelected({
+              image: next.image,
+              label: next.title,
+              alt: next.title,
+            })
+          }}
+        />
+        <AccordionGallery
+          items={items.map((item) => ({
+            image: item.image,
+            label: item.title,
+            alt: item.title,
+          }))}
+          defaultIndex={2}
+          expandRatio={0.52}
+          trigger="hover"
+          accentColor="#1190CF"
+          overlayColor="#0C0A28"
+          textColor="#ffffff"
+          radius={24}
+          gap={12}
+          height={520}
+          onItemClick={(_, index) => {
+            const next = items[index]
+            if (!next) return
+            setSelected({
+              image: next.image,
+              label: next.title,
+              alt: next.title,
+            })
+          }}
+        />
+        <AccordionGallery
+          items={items.map((item) => ({
+            image: item.image,
+            label: item.title,
+            alt: item.title,
+          }))}
+          defaultIndex={4}
+          expandRatio={0.52}
+          trigger="hover"
+          accentColor="#1190CF"
+          overlayColor="#0C0A28"
+          textColor="#ffffff"
+          radius={24}
+          gap={12}
+          height={520}
+          onItemClick={(_, index) => {
+            const next = items[index]
+            if (!next) return
+            setSelected({
+              image: next.image,
+              label: next.title,
+              alt: next.title,
+            })
+          }}
+        />
+</div>
+      </Container>
       <Dialog
         open={selected !== null}
         onOpenChange={(open) => {
@@ -129,7 +134,7 @@ export const GalleryPage = () => {
       >
         <DialogContent className="max-h-[90dvh] w-auto max-w-[min(96vw,960px)] overflow-hidden bg-white p-3 pt-12 sm:max-w-[min(96vw,960px)]">
           <DialogTitle>
-            {selected?.title ?? intl.formatMessage({ id: 'gallery.page.title' })}
+            {selected?.label ?? intl.formatMessage({ id: 'gallery.page.title' })}
           </DialogTitle>
           <DialogDescription className="sr-only">
             <FormattedMessage id="gallery.dialog.description" />
@@ -137,7 +142,7 @@ export const GalleryPage = () => {
           {selected ? (
             <img
               src={selected.image}
-              alt={selected.title ?? ''}
+              alt={selected.alt ?? selected.label ?? ''}
               className="mx-auto max-h-[75dvh] w-auto max-w-full bg-white object-contain"
             />
           ) : null}
