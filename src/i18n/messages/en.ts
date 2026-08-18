@@ -31,14 +31,14 @@ export const en = {
   'about.body':
     'We help professionals and organizations launch professional learning, training, consulting, and strategic development programs. We connect human development with business results to ensure clear and measurable growth. Our philosophy is built on the belief that sustainable organizational growth can only be achieved through a scientific methodology that combines precise planning with innovative solutions. We work as an integrated marketing arm, ensuring our clients build a strong and impactful presence in competitive markets.',
   'about.vision.kicker': 'Our vision',
-  'about.vision.title': 'Pioneers creating success everywhere',
+  'about.vision.title': 'Our vision',
   'about.vision.body':
-    'We aspire for every person and organization to turn ambition into tangible results—through a learning environment that inspires creativity and transforms knowledge into real impact in society and the market.',
+    'To set the standard for the marketing industry in the Arab world, and to become the most trusted partner for ambitious companies on their journey toward global leadership.',
   'about.vision.imageAlt': 'Image representing Pioneers of Success vision',
-  'about.message.kicker': 'Our message',
-  'about.message.title': 'Empowering people toward stronger organizations',
+  'about.message.kicker': 'Our mission',
+  'about.message.title': 'Our mission',
   'about.message.body':
-    'We deliver training, coaching, and consulting built on a scientific methodology that blends field expertise with innovative solutions—helping our clients build a strong, influential presence in their markets.',
+    'Empowering the business sector is the key: delivering integrated marketing solutions defined by exceptional quality and innovation, turning marketing challenges into tangible growth opportunities that achieve the highest return on investment.',
   'about.message.imageAlt': 'Image representing Pioneers of Success message',
   'about.stat1.value': '12+',
   'about.stat1.label': 'Years of practice',
@@ -93,7 +93,7 @@ export const en = {
 
   'events.kicker': 'Events',
   'events.title': 'Our events and gatherings',
-  'events.cta': 'Reserve a seat',
+  'events.cta': 'View details',
   'events.item1.title': 'Leading through change',
   'events.item1.meta': 'Amman · 12 Sep 2026',
   'events.item1.body': 'A half-day workshop for managers navigating transformation and mixed-generation teams.',
@@ -142,6 +142,7 @@ export const en = {
   'gallery.page.title': 'Gallery',
   'gallery.item': 'Photo {n}',
   'gallery.dialog.description': 'Enlarged gallery photo.',
+  'gallery.loadMore': 'Load more',
 
   'notFound.title': 'Page not found',
   'notFound.body': 'The page you are looking for does not exist.',

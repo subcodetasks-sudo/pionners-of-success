@@ -6,6 +6,7 @@ import './AccordionGallery.css'
 export type AccordionGalleryItem = {
   image: string
   label?: string
+  description?: string
   link?: string
   alt?: string
 }
@@ -74,7 +75,12 @@ const AccordionGallery = ({
 
   const vertical = orientation === 'vertical'
   const count = items.length
-  const [active, setActive] = useState(Math.min(Math.max(defaultIndex, 0), count - 1))
+  const [active, setActive] = useState(Math.min(Math.max(defaultIndex, 0), Math.max(count - 1, 0)))
+
+  useEffect(() => {
+    firstRunRef.current = true
+    setActive(Math.min(Math.max(defaultIndex, 0), Math.max(count - 1, 0)))
+  }, [count, defaultIndex])
 
   const prefersReduced =
     typeof window !== 'undefined' && window.matchMedia
@@ -239,7 +245,7 @@ const AccordionGallery = ({
             role="listitem"
             tabIndex={0}
             aria-current={isActive ? 'true' : undefined}
-            aria-label={item.label}
+            aria-label={item.label || item.description}
           >
             <span className="ag-panel__frame">
               <span
@@ -248,11 +254,17 @@ const AccordionGallery = ({
                   mediaRefs.current[i] = el
                 }}
               >
-                <img src={item.image} alt={item.alt || item.label || ''} draggable="false" />
+                <img
+                  src={item.image}
+                  alt={item.alt || item.label || ''}
+                  loading="lazy"
+                  decoding="async"
+                  draggable="false"
+                />
               </span>
               <span className="ag-panel__overlay" aria-hidden="true" />
             </span>
-            {showLabels ? (
+            {showLabels && (item.label || item.description) ? (
               <span className="ag-panel__label" aria-hidden="true">
                 <span
                   className="ag-panel__bar"
@@ -266,7 +278,8 @@ const AccordionGallery = ({
                     textRefs.current[i] = el
                   }}
                 >
-                  {item.label}
+                  {item.label ? <span className="ag-panel__title">{item.label}</span> : null}
+                  {item.description ? <span className="ag-panel__desc">{item.description}</span> : null}
                 </span>
               </span>
             ) : null}

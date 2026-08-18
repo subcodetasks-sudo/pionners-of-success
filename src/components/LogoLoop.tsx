@@ -16,6 +16,7 @@ export type LogoItem =
       sizes?: string;
       width?: number;
       height?: number;
+      fallbackSrc?: string;
     };
 
 export interface LogoLoopProps {
@@ -355,7 +356,15 @@ export const LogoLoop = React.memo<LogoLoopProps>(
             title={(item as any).title}
             loading="lazy"
             decoding="async"
+            fetchPriority="low"
             draggable={false}
+            onError={(event) => {
+              const fallbackSrc = (item as { fallbackSrc?: string }).fallbackSrc
+              const img = event.currentTarget
+              if (!fallbackSrc || img.dataset.fallbackApplied === 'true') return
+              img.dataset.fallbackApplied = 'true'
+              img.src = fallbackSrc
+            }}
           />
         );
 

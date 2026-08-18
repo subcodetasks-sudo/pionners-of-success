@@ -1,10 +1,13 @@
+import { useEffect, useRef, useState } from 'react'
 import { useIntl } from 'react-intl'
+import logo from '@/assets/Logo.webp'
+import { LogoLoop, type LogoItem } from '@/components/LogoLoop'
 import { Container } from '@/components/layout/Container'
 import { SectionHeading } from '@/components/layout/SectionHeading'
-import { LogoLoop, type LogoItem } from '@/components/LogoLoop'
 import { isLocale, LOCALE_DIR } from '@/i18n/locales'
+import { fetchPartnersContent } from '@/lib/content'
 
-const sponsorLogos: LogoItem[] = [
+const fallbackSponsorLogos: LogoItem[] = [
   { src: '/imgs/sponsers/ahmed-almaghribi.webp', alt: 'Ahmed Almaghribi' },
   { src: '/imgs/sponsers/al-ahli-club.webp', alt: 'Al Ahli Club' },
   { src: '/imgs/sponsers/alhadaya-center.webp', alt: 'Alhadaya Center' },
@@ -53,18 +56,66 @@ const sponsorLogos: LogoItem[] = [
   { src: '/imgs/sponsers/zahran.webp', alt: 'Zahran' },
 ]
 
+const toPartnerLogo = (partner: { name: string; url: string; logo_url: string }): LogoItem => {
+  const href = partner.url?.trim()
+  return {
+    src: partner.logo_url?.trim() || logo,
+    alt: partner.name,
+    title: partner.name,
+    href: href || undefined,
+    fallbackSrc: logo,
+  }
+}
+
 export const SponsorsSection = () => {
   const { locale } = useIntl()
   const isRtl = isLocale(locale) ? LOCALE_DIR[locale] === 'rtl' : true
+  const sectionRef = useRef<HTMLElement>(null)
+  const [logos, setLogos] = useState<LogoItem[]>(fallbackSponsorLogos)
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+
+    let cancelled = false
+    setLogos(fallbackSponsorLogos)
+
+    const loadPartners = () => {
+      fetchPartnersContent()
+        .then((data) => {
+          if (cancelled || !data?.length) return
+          setLogos(data.map(toPartnerLogo))
+        })
+        .catch(() => {
+          if (!cancelled) setLogos(fallbackSponsorLogos)
+        })
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return
+        observer.disconnect()
+        loadPartners()
+      },
+      { rootMargin: '280px 0px' },
+    )
+
+    observer.observe(section)
+
+    return () => {
+      cancelled = true
+      observer.disconnect()
+    }
+  }, [locale])
 
   return (
-    <section className="overflow-hidden border-b border-primary-100 bg-white py-14">
+    <section ref={sectionRef} className="overflow-hidden border-b border-primary-100 bg-white py-14">
       <Container>
         <SectionHeading kicker="sponsors.kicker" title="sponsors.title" />
       </Container>
       <div className="mt-10">
         <LogoLoop
-          logos={sponsorLogos}
+          logos={logos}
           speed={48}
           direction={isRtl ? 'right' : 'left'}
           logoHeight={88}

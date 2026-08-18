@@ -19,4 +19,13 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://web.subcodeco.com',
+        changeOrigin: true,
+        secure: true,
+      },
+    },
+  },
 })

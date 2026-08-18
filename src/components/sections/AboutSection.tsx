@@ -1,8 +1,10 @@
 import { FormattedMessage, useIntl } from 'react-intl'
-import { Eye, Sparkles, Target } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Eye, Target } from 'lucide-react'
 import { motion, useReducedMotion, type Variants } from 'motion/react'
 import logo from '@/assets/Logo.webp'
 import { Container } from '@/components/layout/Container'
+import { fetchAboutContent } from '@/lib/content'
 import { cn } from '@/lib/utils'
 
 const ease = [0.22, 1, 0.36, 1] as const
@@ -34,7 +36,6 @@ const imageReveal: Variants = {
 }
 
 type PillarCardProps = {
-  kickerId: 'about.vision.kicker' | 'about.message.kicker'
   titleId: 'about.vision.title' | 'about.message.title'
   bodyId: 'about.vision.body' | 'about.message.body'
   imageSrc: string
@@ -46,7 +47,6 @@ type PillarCardProps = {
 }
 
 const PillarCard = ({
-  kickerId,
   titleId,
   bodyId,
   imageSrc,
@@ -84,11 +84,26 @@ const PillarCard = ({
           aria-hidden
         />
         <div className={cn('relative overflow-hidden rounded-3xl ring-1 shadow-lg', accentRing)}>
-          <div className="flex aspect-4/3 items-center justify-center overflow-hidden bg-white p-10 sm:p-14">
+          <div
+            className={cn(
+              'flex aspect-4/3 items-center justify-center overflow-hidden bg-white',
+              imageSrc === logo ? 'p-10 sm:p-14' : '',
+            )}
+          >
             <img
               src={imageSrc}
               alt={intl.formatMessage({ id: imageAltId })}
-              className="h-full w-full object-contain transition-transform duration-700 ease-out hover:scale-105"
+              loading="lazy"
+              decoding="async"
+              className={cn(
+                'h-full w-full transition-transform duration-700 ease-out hover:scale-105',
+                imageSrc === logo ? 'object-contain' : 'object-cover',
+              )}
+              onError={(event) => {
+                if (event.currentTarget.dataset.fallbackApplied === 'true') return
+                event.currentTarget.dataset.fallbackApplied = 'true'
+                event.currentTarget.src = logo
+              }}
             />
           </div>
         </div>
@@ -103,12 +118,6 @@ const PillarCard = ({
       </motion.div>
 
       <motion.div className="text-start lg:py-4" variants={stagger}>
-        <motion.p
-          className="mb-3 text-sm font-semibold tracking-wide text-secondary-600"
-          variants={fadeUp}
-        >
-          <FormattedMessage id={kickerId} />
-        </motion.p>
         <motion.h3
           className="mb-4 text-2xl font-semibold leading-snug text-primary sm:text-3xl"
           variants={fadeUp}
@@ -123,8 +132,46 @@ const PillarCard = ({
   )
 }
 
+type AboutView = {
+  title: string
+  body: string
+  imageUrl: string
+}
+
 export const AboutSection = () => {
+  const intl = useIntl()
   const reduceMotion = useReducedMotion()
+
+  const fallback: AboutView = {
+    title: intl.formatMessage({ id: 'about.title' }),
+    body: intl.formatMessage({ id: 'about.body' }),
+    imageUrl: logo,
+  }
+
+  const [about, setAbout] = useState<AboutView>(fallback)
+
+  useEffect(() => {
+    setAbout(fallback)
+
+    let cancelled = false
+
+    fetchAboutContent()
+      .then((data) => {
+        if (cancelled || !data) return
+        setAbout({
+          title: data.title?.trim() || fallback.title,
+          body: data.content?.trim() || fallback.body,
+          imageUrl: data.image_url?.trim() || fallback.imageUrl,
+        })
+      })
+      .catch(() => {
+        if (!cancelled) setAbout(fallback)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [intl])
 
   return (
     <section id="about" className="relative scroll-mt-24 overflow-hidden py-20 sm:py-24">
@@ -140,33 +187,25 @@ export const AboutSection = () => {
           viewport={{ once: true, amount: 0.3 }}
           variants={stagger}
         >
-          <motion.div
-            className="mb-4 inline-flex items-center gap-2 rounded-full bg-secondary-50 px-4 py-1.5 text-sm font-medium text-secondary-700 ring-1 ring-secondary-200/80"
-            variants={fadeUp}
-          >
-            <Sparkles className="size-4 text-secondary-500" />
-            <FormattedMessage id="about.kicker" />
-          </motion.div>
           <motion.h2
             className="mb-5 text-3xl font-semibold leading-tight text-[#0C0A28] sm:text-4xl lg:text-[2.5rem]"
             variants={fadeUp}
           >
-            <FormattedMessage id="about.title" />
+            {about.title}
           </motion.h2>
           <motion.p
             className="text-base leading-relaxed text-tertiary-600 sm:text-lg"
             variants={fadeUp}
           >
-            <FormattedMessage id="about.body" />
+            {about.body}
           </motion.p>
         </motion.div>
 
         <div className="flex flex-col gap-16 sm:gap-20">
           <PillarCard
-            kickerId="about.vision.kicker"
             titleId="about.vision.title"
             bodyId="about.vision.body"
-            imageSrc={logo}
+            imageSrc={about.imageUrl}
             imageAltId="about.vision.imageAlt"
             icon={Eye}
             accent="secondary"
@@ -174,10 +213,9 @@ export const AboutSection = () => {
           />
 
           <PillarCard
-            kickerId="about.message.kicker"
             titleId="about.message.title"
             bodyId="about.message.body"
-            imageSrc={logo}
+            imageSrc={about.imageUrl}
             imageAltId="about.message.imageAlt"
             icon={Target}
             accent="primary"
