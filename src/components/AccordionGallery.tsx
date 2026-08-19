@@ -235,7 +235,7 @@ const AccordionGallery = ({
             ref={(el: HTMLElement | null) => {
               panelRefs.current[i] = el
             }}
-            className={`ag-panel${isActive ? ' ag-panel--active' : ''}`}
+            className={`ag-panel ${isActive ? ' ag-panel--active' : ''}`}
             style={{ borderRadius: `${radius}px` }}
             href={item.link || undefined}
             onClick={(e: React.MouseEvent<HTMLElement>) => handleClick(i, e)}

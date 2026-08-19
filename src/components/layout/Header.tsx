@@ -145,7 +145,7 @@ export const Header = () => {
   return (
     <>
       <motion.div
-        className="fixed top-2 right-2 left-2 z-40 md:hidden"
+        className="fixed top-2 right-2 left-2 z-40 md:hidden "
         initial={reduceMotion ? false : { y: '-120%', opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={navFromTop}
@@ -207,7 +207,7 @@ export const Header = () => {
             </span>
           </span>
         </Link>
-        <nav className="hidden items-center justify-center gap-5 text-sm text-tertiary-600 md:flex">
+        <nav className="hidden items-center justify-center gap-5  text-tertiary-600 md:flex">
           {navItems.map((item) => {
             const href = item.hash
               ? `${getLocalizedPath('/', currentLocale)}#${item.hash}`

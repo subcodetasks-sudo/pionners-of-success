@@ -5,14 +5,13 @@ import { ArrowRight } from 'lucide-react'
 import { motion, useReducedMotion, type Variants } from 'motion/react'
 import logo from '@/assets/Logo.webp'
 import CountUp from '@/components/CountUp'
-import Grainient from '@/components/Grainient'
 import { Container } from '@/components/layout/Container'
 import { buttonVariants } from '@/components/ui/button'
 import { DEFAULT_LOCALE, type Locale } from '@/i18n/locales'
 import { getLocalizedPath } from '@/i18n/navigation'
 import { fetchHeroContent, fetchStatsContent } from '@/lib/content'
 import { cn } from '@/lib/utils'
-
+import GradientBlinds from '../ui/GradientBlinds';
 const ease = [0.22, 1, 0.36, 1] as const
 
 const fadeUp: Variants = {
@@ -178,18 +177,20 @@ export const HeroSection = () => {
   return (
     <section id="home" className="relative flex min-h-dvh scroll-mt-24 items-center overflow-hidden">
       <div className="pointer-events-none absolute inset-0" aria-hidden>
-        <Grainient
-          color1="#F4F8FE"
-          color2="#BAE6FD"
-          color3="#E2E2EC"
-          contrast={1.08}
-          gamma={1.12}
-          saturation={0.85}
-          grainAmount={0.06}
-          timeSpeed={0.18}
-          warpStrength={0.7}
-          warpAmplitude={70}
-        />
+      <GradientBlinds
+    gradientColors={["#1190Cf","#0C0A28"]}
+    angle={20}
+    noise={0.5}
+    blindCount={16}
+    blindMinWidth={60}
+    mouseDampening={0.15}
+    mirrorGradient={false}
+    spotlightRadius={0.5}
+    spotlightSoftness={1}
+    spotlightOpacity={1}
+    distortAmount={0}
+    shineDirection="left"
+  />
       </div>
       <div
         className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-24 bg-linear-to-b from-transparent to-white"
