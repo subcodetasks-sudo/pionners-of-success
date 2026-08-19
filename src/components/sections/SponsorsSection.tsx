@@ -1,11 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
-import { useIntl } from 'react-intl'
-import logo from '@/assets/Logo.webp'
-import { LogoLoop, type LogoItem } from '@/components/LogoLoop'
-import { Container } from '@/components/layout/Container'
-import { SectionHeading } from '@/components/layout/SectionHeading'
-import { isLocale, LOCALE_DIR } from '@/i18n/locales'
-import { fetchPartnersContent } from '@/lib/content'
+import logo from '@/assets/Logo.webp';
+import { type LogoItem } from '@/components/LogoLoop';
+import { fetchPartnersContent } from '@/lib/content';
+import { useEffect, useRef, useState } from 'react';
+import { useIntl } from 'react-intl';
+import { Marquee } from '../ui/marquee';
 
 const fallbackSponsorLogos: LogoItem[] = [
   { src: '/imgs/sponsers/ahmed-almaghribi.webp', alt: 'Ahmed Almaghribi' },
@@ -69,7 +67,7 @@ const toPartnerLogo = (partner: { name: string; url: string; logo_url: string })
 
 export const SponsorsSection = () => {
   const { locale } = useIntl()
-  const isRtl = isLocale(locale) ? LOCALE_DIR[locale] === 'rtl' : true
+  // const isRtl = isLocale(locale) ? LOCALE_DIR[locale] === 'rtl' : true
   const sectionRef = useRef<HTMLElement>(null)
   const [logos, setLogos] = useState<LogoItem[]>(fallbackSponsorLogos)
 
@@ -109,23 +107,32 @@ export const SponsorsSection = () => {
   }, [locale])
 
   return (
-    <section ref={sectionRef} className="overflow-hidden border-b border-primary-100 bg-white py-14">
-      <Container>
+    <section ref={sectionRef} className="overflow-hidden   pt-6">
+      {/* <Container>
         <SectionHeading kicker="sponsors.kicker" title="sponsors.title" />
-      </Container>
+      </Container> */}
       <div className="mt-10">
-        <LogoLoop
+        {/* <LogoLoop
           logos={logos}
-          speed={48}
+          speed={40}
           direction={isRtl ? 'right' : 'left'}
-          logoHeight={88}
-          gap={72}
+          logoHeight={60}
+          gap={50}
           fadeOut
           fadeOutColor="#ffffff"
           scaleOnHover
           pauseOnHover
           ariaLabel="Sponsors"
-        />
+        /> */}
+        <div dir="ltr" className="relative flex w-full flex-row items-center justify-center overflow-hidden">
+      <Marquee pauseOnHover  className="[--duration:90s]">
+        {logos?.map((logo ) => (
+          <img key={logo.id} src={logo.src}  className="w-20 h-20 object-contain" />
+        ))}
+      </Marquee>
+      <div className="from-background pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r"></div>
+      <div className="from-background pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l"></div>
+    </div>
       </div>
     </section>
   )

@@ -2,12 +2,15 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 export type LogoItem =
   | {
+      id?: string | number ;
       node: React.ReactNode;
       href?: string;
       title?: string;
       ariaLabel?: string;
+      src?: string;
     }
   | {
+      id?: string | number ;
       src: string;
       alt?: string;
       href?: string;
