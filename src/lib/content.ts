@@ -179,3 +179,24 @@ export const fetchGalleryContent = async (): Promise<GalleryContent[] | null> =>
   if (!data?.data?.length) return null
   return [...data.data].sort((a, b) => a.order - b.order)
 }
+
+
+
+export type ServiceContent = {
+  id: number
+  title: string
+  description: string
+  icon: string
+  image_url: string
+  order: number
+  lang: string
+}
+
+type ServiceResponse = {
+  data: ServiceContent[] | null}
+
+export const fetchServicesContent = async (): Promise<ServiceContent[] | null> => {
+  const { data } = await api.get<ServiceResponse>('/v1/content/services')
+  if (!data?.data?.length) return null
+  return [...data.data].sort((a, b) => a.order - b.order)
+}

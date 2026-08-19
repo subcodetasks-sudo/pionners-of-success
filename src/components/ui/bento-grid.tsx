@@ -2,6 +2,7 @@ import { type ComponentPropsWithoutRef, type ReactNode } from "react"
 import { ArrowRightIcon } from "@radix-ui/react-icons"
 
 import { cn } from "@/lib/utils"
+import { Link } from "react-router-dom";
 
 interface BentoGridProps extends ComponentPropsWithoutRef<"div"> {
   children: ReactNode
@@ -66,16 +67,16 @@ const BentoCard = ({
       </div>
 
       {/* button absolutely positioned at the bottom, hidden until hover */}
-      <div className="absolute bottom-4 start-5 translate-y-3 opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100">
-        <a
-          href={href}
+      <div className="absolute bottom-3  start-5 translate-y-3 opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+        <Link
+          to={href}
           className="inline-flex items-center gap-2 rounded-full bg-secondary! py-2 ps-4 pe-2 text-xs font-semibold text-white transition-all duration-200 hover:brightness-110"
         >
           {cta}
           <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white">
             <ArrowRightIcon className="h-3 w-3 rtl:-rotate-135 ltr:-rotate-45 text-secondary!" />
           </span>
-        </a>
+        </Link>
       </div>
     </div>
 

@@ -1,23 +1,33 @@
-import { useRef } from 'react'
-import { ArrowRightIcon } from '@radix-ui/react-icons'
-import { FormattedMessage, useIntl } from 'react-intl'
+import { Container } from '@/components/layout/Container';
+import { SectionHeading } from '@/components/layout/SectionHeading';
+import { BentoCard, BentoGrid } from '@/components/ui/bento-grid';
+import { DEFAULT_LOCALE, type Locale } from '@/i18n/locales';
+import { getLocalizedPath } from '@/i18n/navigation';
+import { fetchServicesContent } from '@/lib/content';
+import { cn } from '@/lib/utils';
+import { ArrowRightIcon } from '@radix-ui/react-icons';
 import {
-  Fingerprint,
-  MonitorSmartphone,
-  Megaphone,
-  FileVideo2,
-  Users,
-  LineChart,
-} from 'lucide-react'
-import { motion, useMotionTemplate, useMotionValue, useReducedMotion, type Variants } from 'motion/react'
-import { Link, useLocation } from 'react-router-dom'
-import { Container } from '@/components/layout/Container'
-import { SectionHeading } from '@/components/layout/SectionHeading'
-import { BentoGrid, BentoCard } from '@/components/ui/bento-grid'
-import { services } from '@/data/services'
-import { DEFAULT_LOCALE, type Locale } from '@/i18n/locales'
-import { getLocalizedPath } from '@/i18n/navigation'
-import { cn } from '@/lib/utils'
+    FileVideo2,
+    Fingerprint,
+    LineChart,
+    Megaphone,
+    MonitorSmartphone,
+    Users,
+} from 'lucide-react';
+import { motion, useMotionTemplate, useMotionValue, useReducedMotion, type Variants } from 'motion/react';
+import { useEffect, useRef, useState } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { Link, useLocation } from 'react-router-dom';
+
+ export type ServiceView = {
+    id: number
+    title: string
+    description: string
+    icon: typeof Fingerprint | typeof MonitorSmartphone | typeof Megaphone | typeof FileVideo2 | typeof Users | typeof  LineChart | string
+    image_url: string
+    order: number
+}
+
 
 const ease = [0.22, 1, 0.36, 1] as const
 
@@ -54,7 +64,7 @@ const bentoColSpan = [
 
 type ServiceCardWrapperProps = {
   index: number
-  service: (typeof services)[number]
+  service: ServiceView
   href: string
   cta: string
 }
@@ -83,7 +93,7 @@ const ServiceCardWrapper = ({ index, service, href, cta }: ServiceCardWrapperPro
   const background = (
     <div className="relative h-48 w-full overflow-hidden">
       <img
-        src={service.image}
+        src={service.image_url}
         alt=""
         className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
       />
@@ -116,11 +126,11 @@ const ServiceCardWrapper = ({ index, service, href, cta }: ServiceCardWrapperPro
       />
 
       <BentoCard
-        name={<FormattedMessage id={service.titleKey} />}
+        name={service.title}
         className="flex-1"
         background={background}
-        Icon={Icon}
-        description={<FormattedMessage id={service.summaryKey} />}
+        Icon={Icon || Fingerprint}
+        description={service.description}
         href={href}
         cta={cta}
       />
@@ -137,9 +147,27 @@ export const ServicesSection = ({ limit, showViewAll = true }: ServicesSectionPr
   const { pathname } = useLocation()
   const intl = useIntl()
   const locale: Locale = pathname.startsWith('/en') ? 'en' : DEFAULT_LOCALE
-  const items = limit ? services.slice(0, limit) : services
   const reduceMotion = useReducedMotion()
   const cta = intl.formatMessage({ id: 'services.viewDetails' })
+  const [services, setServices] = useState<ServiceView[]>([]);
+
+
+
+  useEffect(() => {
+    fetchServicesContent().then(data => {
+      if (!data) return
+      setServices(data.map(service => ({
+        id: service.id,
+        title: service.title,
+        description: service.description,
+        icon: service.icon,
+        image_url: service.image_url,
+        order: service.order,
+      })))
+    }).catch(error => {
+      console.error('Error fetching services:', error)
+    })
+  }, [])
 
   return (
     <section id="services" className="scroll-mt-30 bg-white pt-24 pb-18">
@@ -156,17 +184,32 @@ export const ServicesSection = ({ limit, showViewAll = true }: ServicesSectionPr
           viewport={{ once: true, amount: 0.08 }}
           variants={stagger}
         >
+          {limit ? (
           <BentoGrid className="auto-rows-auto items-stretch">
-            {items.map((service, i) => (
+            {services.length > 0 && services.slice(0, limit).map((service, i) => (
               <ServiceCardWrapper
-                key={service.slug}
+                key={service.id}
                 index={i}
                 service={service}
-                href={getLocalizedPath(`/services/${service.slug}`, locale)}
+                href={getLocalizedPath(`/services/${service.id}`, locale)}
                 cta={cta}
               />
             ))}
           </BentoGrid>
+          )
+        : (
+          <BentoGrid className="auto-rows-auto items-stretch">
+            {services.length > 0 && services?.map((service, i) => (
+              <ServiceCardWrapper
+                key={service.id}
+                index={i}
+                service={service}
+                href={getLocalizedPath(`/services/${service.id}`, locale)}
+                cta={cta}
+              />
+            ))}
+          </BentoGrid>
+        )}
         </motion.div>
 
         {showViewAll ? (

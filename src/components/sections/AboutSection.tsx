@@ -1,6 +1,6 @@
 import { useIntl } from 'react-intl'
 import { useEffect, useState } from 'react'
-import { Eye, Target } from 'lucide-react'
+import { Eye, Sparkles, Target } from 'lucide-react'
 import { motion, useReducedMotion, type Variants } from 'motion/react'
 import logo from '@/assets/Logo.webp'
 import { Container } from '@/components/layout/Container'
@@ -151,7 +151,7 @@ export const AboutSection = () => {
   const fallback: AboutView = {
     title: intl.formatMessage({ id: 'about.title' }),
     body: intl.formatMessage({ id: 'about.body' }),
-    imageUrl: logo,
+    imageUrl: "",
   }
 
   const visionFallback: PillarView = {
@@ -224,12 +224,18 @@ export const AboutSection = () => {
       />
       <Container>
         <motion.div
-          className="relative mx-auto mb-16 max-w-3xl text-center sm:mb-20"
+          className={ cn("relative mx-auto mb-16  sm:mb-20 grid items-center gap-8 lg:grid-cols-2 lg:gap-12", about.imageUrl ? "grid items-center gap-8 lg:grid-cols-2 lg:gap-12" : "flex items-center justify-center max-w-3xl mx-auto")}
           initial={reduceMotion ? false : 'hidden'}
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
           variants={stagger}
         >
+          <div className={cn( about.imageUrl ? "text-start" : "text-center")}>
+
+            <div className="mb-5 inline-flex w-fit items-center gap-2 rounded-full  bg-primary backdrop-blur-2xl px-3 py-1 text-sm text-white">
+              <Sparkles className="h-4 w-4 text-secondary-200" />
+              {intl.formatMessage({ id: 'about.kicker' })}
+            </div>
           <motion.h2
             className="mb-5 text-3xl font-semibold leading-tight text-[#0C0A28] sm:text-4xl lg:text-[2.5rem]"
             variants={fadeUp}
@@ -242,6 +248,30 @@ export const AboutSection = () => {
           >
             {about.body}
           </motion.p>
+          </div>
+          {about.imageUrl !== "" && (
+            <div
+            className={cn(
+              'flex aspect-4/3 items-center justify-center overflow-hidden bg-white',
+              "relative overflow-hidden rounded-3xl  shadow-lg" ,
+            )}>
+          <img
+              src={about.imageUrl||logo}
+              alt={about.title || 'about image'}
+              loading="lazy"
+              decoding="async"
+              className={cn(
+                'h-full w-full transition-transform duration-700 ease-out hover:scale-105',
+                 'object-cover',
+              )}
+              onError={(event) => {
+                if (event.currentTarget.dataset.fallbackApplied === 'true') return
+                event.currentTarget.dataset.fallbackApplied = 'true'
+                event.currentTarget.src = logo
+              }}
+            />
+          </div>
+          )}
         </motion.div>
 
         <div className="flex flex-col gap-16 sm:gap-20">
