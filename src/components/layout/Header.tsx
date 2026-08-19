@@ -28,6 +28,7 @@ const navItems = [
   { section: 'home' as const, to: '', hash: 'home', id: 'nav.home' as const },
   { section: 'about' as const, to: '', hash: 'about', id: 'nav.about' as const },
   { section: 'services' as const, to: 'services', id: 'nav.services' as const },
+  { section: 'work' as const, to: 'work', id: 'nav.work' as const },
   { section: 'gallery' as const, to: 'gallery', id: 'nav.gallery' as const },
   { section: 'events' as const, to: '', hash: 'events', id: 'nav.events' as const },
   { section: 'feedback' as const, to: '', hash: 'feedback', id: 'nav.feedback' as const },
@@ -50,6 +51,7 @@ export const Header = () => {
   const switchedPath = `${getLocalizedPath(pathname, nextLocale)}${hash}`
   const isServicesRoute = pathname.includes('/services')
   const isGalleryRoute = pathname.includes('/gallery')
+  const isWorkRoute = pathname.includes('/work')
   const [activeSection, setActiveSection] = useState<SectionId>(isServicesRoute ? 'services' : 'home')
   const [servicesMenuOpen, setServicesMenuOpen] = useState(false)
   const cardNavItems = useMemo(
@@ -90,6 +92,11 @@ export const Header = () => {
         label: intl.formatMessage({ id: 'nav.events' }),
         href: `${getLocalizedPath('/', currentLocale)}#events`,
         ariaLabel: intl.formatMessage({ id: 'nav.events' }),
+      },
+      {
+        label: intl.formatMessage({ id: 'nav.work' }),
+        href: getLocalizedPath('/work', currentLocale),
+        ariaLabel: intl.formatMessage({ id: 'nav.work' }),
       },
       {
         label: intl.formatMessage({ id: 'nav.gallery' }),
@@ -205,7 +212,9 @@ export const Header = () => {
             const href = item.hash
               ? `${getLocalizedPath('/', currentLocale)}#${item.hash}`
               : getLocalizedPath(item.to, currentLocale)
-            const isActive = isGalleryRoute
+            const isActive = isWorkRoute
+              ? item.section === 'work'
+              : isGalleryRoute
               ? item.section === 'gallery'
               : isServicesRoute
                 ? item.section === 'services'

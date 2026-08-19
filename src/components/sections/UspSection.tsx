@@ -1,10 +1,12 @@
+import { useEffect, useState } from 'react'
 import { CheckCircle2, Sparkles } from 'lucide-react'
 import { motion, useReducedMotion, type Variants } from 'motion/react'
-import { FormattedMessage } from 'react-intl'
+import { useIntl } from 'react-intl'
 import { Container } from '@/components/layout/Container'
+import { fetchAdvantagesContent } from '@/lib/content'
 import { cn } from '@/lib/utils'
 
-const items = [1, 2, 3, 4] as const
+const fallbackImage = '/imgs/services/strategic-consulting.webp'
 const ease = [0.22, 1, 0.36, 1] as const
 
 const fadeUp: Variants = {
@@ -23,8 +25,66 @@ const stagger: Variants = {
   },
 }
 
+type AdvantageView = {
+  title: string
+  body: string
+}
+
+type UspView = {
+  kicker: string
+  title: string
+  body: string
+  imageUrl: string
+  items: AdvantageView[]
+}
+
 export const UspSection = () => {
+  const intl = useIntl()
   const reduceMotion = useReducedMotion()
+
+  const fallback: UspView = {
+    kicker: intl.formatMessage({ id: 'usp.kicker' }),
+    title: intl.formatMessage({ id: 'usp.title' }),
+    body: intl.formatMessage({ id: 'usp.item1.body' }),
+    imageUrl: fallbackImage,
+    items: [1, 2, 3, 4].map((n) => ({
+      title: intl.formatMessage({ id: `usp.item${n}.title` }),
+      body: intl.formatMessage({ id: `usp.item${n}.body` }),
+    })),
+  }
+
+  const [usp, setUsp] = useState<UspView>(fallback)
+
+  useEffect(() => {
+    setUsp(fallback)
+
+    let cancelled = false
+
+    fetchAdvantagesContent()
+      .then((data) => {
+        if (cancelled || !data) return
+
+        setUsp({
+          kicker: data.kicker?.trim() || fallback.kicker,
+          title: data.title?.trim() || fallback.title,
+          body: data.content?.trim() || fallback.body,
+          imageUrl: data.image_url?.trim() || fallback.imageUrl,
+          items: data.items?.length
+            ? data.items.map((item, index) => ({
+                title: item.title?.trim() || fallback.items[index]?.title || '',
+                body: item.content?.trim() || fallback.items[index]?.body || '',
+              }))
+            : fallback.items,
+        })
+      })
+      .catch(() => {
+        if (!cancelled) setUsp(fallback)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [intl])
 
   return (
     <section className="relative overflow-hidden bg-primary py-18 text-white">
@@ -50,21 +110,21 @@ export const UspSection = () => {
             />
             <div className="mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-sm text-white/85">
               <Sparkles className="h-4 w-4 text-secondary-200" />
-              <FormattedMessage id="usp.kicker" />
+              {usp.kicker}
             </div>
             <h2 className="max-w-md text-3xl font-semibold leading-tight text-white! sm:text-4xl">
-              <FormattedMessage id="usp.title" />
+              {usp.title}
             </h2>
             <p className="mt-4 max-w-lg text-sm leading-7 text-primary-100 sm:text-base">
-              <FormattedMessage id="usp.item1.body" />
+              {usp.body}
             </p>
             <motion.div
               className="relative mt-8 min-h-52 overflow-hidden rounded-[22px] border border-white/10"
               variants={fadeUp}
             >
               <motion.img
-                src="/imgs/services/strategic-consulting.webp"
-                alt=""
+                src={usp.imageUrl}
+                alt={usp.title}
                 className="h-full w-full object-cover"
                 initial={reduceMotion ? undefined : { scale: 1.06 }}
                 whileInView={reduceMotion ? undefined : { scale: 1 }}
@@ -79,12 +139,12 @@ export const UspSection = () => {
           </motion.div>
 
           <motion.div className="grid auto-rows-fr gap-4 sm:grid-cols-2" variants={stagger}>
-            {items.map((n) => (
+            {usp.items.map((item, index) => (
               <motion.div
-                key={n}
+                key={`${item.title}-${index}`}
                 className={cn(
                   'group relative flex h-full flex-col overflow-hidden rounded-[24px] border border-white/12 bg-white/8 p-6 shadow-[0_20px_40px_rgba(0,0,0,0.14)] backdrop-blur-sm transition-transform duration-300 hover:-translate-y-1',
-                  'before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-white/60 before:to-transparent before:content-[""]'
+                  'before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-white/60 before:to-transparent before:content-[""]',
                 )}
                 variants={fadeUp}
               >
@@ -92,14 +152,12 @@ export const UspSection = () => {
                   <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-secondary/18 text-secondary-100 ring-1 ring-white/10">
                     <CheckCircle2 className="h-5 w-5" />
                   </span>
-                  <span className="text-sm font-medium tracking-[0.24em] text-white/35">0{n}</span>
+                  <span className="text-sm font-medium tracking-[0.24em] text-white/35">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
                 </div>
-                <h3 className="mb-2 text-lg font-semibold text-white">
-                  <FormattedMessage id={`usp.item${n}.title`} />
-                </h3>
-                <p className="text-sm leading-7 text-primary-100">
-                  <FormattedMessage id={`usp.item${n}.body`} />
-                </p>
+                <h3 className="mb-2 text-lg font-semibold text-white">{item.title}</h3>
+                <p className="text-sm leading-7 text-primary-100">{item.body}</p>
               </motion.div>
             ))}
           </motion.div>

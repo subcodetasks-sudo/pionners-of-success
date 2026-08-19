@@ -151,21 +151,23 @@ export const GalleryPage = () => {
           if (!open) setSelected(null)
         }}
       >
-        <DialogContent className="max-h-[90dvh] w-auto max-w-[min(96vw,960px)] overflow-hidden bg-white p-3 pt-12 sm:max-w-[min(96vw,960px)]">
-          <DialogTitle>
+        <DialogContent className="grid h-[min(90dvh,680px)] w-[min(96vw,800px)] max-w-[min(96vw,800px)] grid-rows-[auto_auto_1fr] overflow-hidden bg-white p-4 pt-12 sm:max-w-[min(96vw,800px)]">
+          <DialogTitle className="truncate">
             {selected?.title || intl.formatMessage({ id: 'gallery.page.title' })}
           </DialogTitle>
           <DialogDescription
-            className={selected?.description ? 'mt-1 text-tertiary-600' : 'sr-only'}
+            className={selected?.description ? 'mt-1 line-clamp-2 text-tertiary-600' : 'sr-only'}
           >
             {selected?.description || intl.formatMessage({ id: 'gallery.dialog.description' })}
           </DialogDescription>
           {selected ? (
-            <img
-              src={selected.image}
-              alt={selected.title || selected.description || ''}
-              className="mx-auto max-h-[75dvh] w-auto max-w-full bg-white object-contain"
-            />
+            <div className="min-h-0 overflow-hidden rounded-lg bg-neutral-100">
+              <img
+                src={selected.image}
+                alt={selected.title || selected.description || ''}
+                className="h-full w-full object-contain"
+              />
+            </div>
           ) : null}
         </DialogContent>
       </Dialog>

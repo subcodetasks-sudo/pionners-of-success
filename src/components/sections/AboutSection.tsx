@@ -1,4 +1,4 @@
-import { FormattedMessage, useIntl } from 'react-intl'
+import { useIntl } from 'react-intl'
 import { useEffect, useState } from 'react'
 import { Eye, Target } from 'lucide-react'
 import { motion, useReducedMotion, type Variants } from 'motion/react'
@@ -36,10 +36,10 @@ const imageReveal: Variants = {
 }
 
 type PillarCardProps = {
-  titleId: 'about.vision.title' | 'about.message.title'
-  bodyId: 'about.vision.body' | 'about.message.body'
+  title: string
+  body: string
   imageSrc: string
-  imageAltId: 'about.vision.imageAlt' | 'about.message.imageAlt'
+  imageAlt: string
   icon: typeof Eye
   accent: 'secondary' | 'primary'
   imageFirst?: boolean
@@ -47,16 +47,15 @@ type PillarCardProps = {
 }
 
 const PillarCard = ({
-  titleId,
-  bodyId,
+  title,
+  body,
   imageSrc,
-  imageAltId,
+  imageAlt,
   icon: Icon,
   accent,
   imageFirst = false,
   reduceMotion,
 }: PillarCardProps) => {
-  const intl = useIntl()
   const accentRing = accent === 'secondary' ? 'ring-secondary-200/60' : 'ring-primary-200/60'
   const accentBg = accent === 'secondary' ? 'bg-secondary-100 text-secondary-700' : 'bg-primary-100 text-primary-800'
   const accentGlow =
@@ -92,7 +91,7 @@ const PillarCard = ({
           >
             <img
               src={imageSrc}
-              alt={intl.formatMessage({ id: imageAltId })}
+              alt={imageAlt}
               loading="lazy"
               decoding="async"
               className={cn(
@@ -122,10 +121,10 @@ const PillarCard = ({
           className="mb-4 text-2xl font-semibold leading-snug text-primary sm:text-3xl"
           variants={fadeUp}
         >
-          <FormattedMessage id={titleId} />
+          {title}
         </motion.h3>
         <motion.p className="text-base leading-relaxed text-tertiary-600 sm:text-lg" variants={fadeUp}>
-          <FormattedMessage id={bodyId} />
+          {body}
         </motion.p>
       </motion.div>
     </motion.article>
@@ -138,6 +137,13 @@ type AboutView = {
   imageUrl: string
 }
 
+type PillarView = {
+  title: string
+  body: string
+  imageUrl: string
+  imageAlt: string
+}
+
 export const AboutSection = () => {
   const intl = useIntl()
   const reduceMotion = useReducedMotion()
@@ -148,24 +154,61 @@ export const AboutSection = () => {
     imageUrl: logo,
   }
 
+  const visionFallback: PillarView = {
+    title: intl.formatMessage({ id: 'about.vision.title' }),
+    body: intl.formatMessage({ id: 'about.vision.body' }),
+    imageUrl: logo,
+    imageAlt: intl.formatMessage({ id: 'about.vision.imageAlt' }),
+  }
+
+  const missionFallback: PillarView = {
+    title: intl.formatMessage({ id: 'about.message.title' }),
+    body: intl.formatMessage({ id: 'about.message.body' }),
+    imageUrl: logo,
+    imageAlt: intl.formatMessage({ id: 'about.message.imageAlt' }),
+  }
+
   const [about, setAbout] = useState<AboutView>(fallback)
+  const [vision, setVision] = useState<PillarView>(visionFallback)
+  const [mission, setMission] = useState<PillarView>(missionFallback)
 
   useEffect(() => {
     setAbout(fallback)
+    setVision(visionFallback)
+    setMission(missionFallback)
 
     let cancelled = false
 
+    const toPillar = (
+      data: { title?: string | null; content?: string | null; image_url?: string | null } | null | undefined,
+      fallbackPillar: PillarView,
+      defaultImage: string,
+    ): PillarView => ({
+      title: data?.title?.trim() || fallbackPillar.title,
+      body: data?.content?.trim() || fallbackPillar.body,
+      imageUrl: data?.image_url?.trim() || defaultImage || fallbackPillar.imageUrl,
+      imageAlt: data?.title?.trim() || fallbackPillar.imageAlt,
+    })
+
     fetchAboutContent()
-      .then((data) => {
-        if (cancelled || !data) return
-        setAbout({
-          title: data.title?.trim() || fallback.title,
-          body: data.content?.trim() || fallback.body,
-          imageUrl: data.image_url?.trim() || fallback.imageUrl,
-        })
+      .then((aboutData) => {
+        if (cancelled || !aboutData) return
+
+        const nextAbout: AboutView = {
+          title: aboutData.title?.trim() || fallback.title,
+          body: aboutData.content?.trim() || fallback.body,
+          imageUrl: aboutData.image_url?.trim() || fallback.imageUrl,
+        }
+
+        setAbout(nextAbout)
+        setVision(toPillar(aboutData.vision, visionFallback, nextAbout.imageUrl))
+        setMission(toPillar(aboutData.message ?? aboutData.mission, missionFallback, nextAbout.imageUrl))
       })
       .catch(() => {
-        if (!cancelled) setAbout(fallback)
+        if (cancelled) return
+        setAbout(fallback)
+        setVision(visionFallback)
+        setMission(missionFallback)
       })
 
     return () => {
@@ -203,20 +246,20 @@ export const AboutSection = () => {
 
         <div className="flex flex-col gap-16 sm:gap-20">
           <PillarCard
-            titleId="about.vision.title"
-            bodyId="about.vision.body"
-            imageSrc={about.imageUrl}
-            imageAltId="about.vision.imageAlt"
+            title={vision.title}
+            body={vision.body}
+            imageSrc={vision.imageUrl}
+            imageAlt={vision.imageAlt}
             icon={Eye}
             accent="secondary"
             reduceMotion={reduceMotion}
           />
 
           <PillarCard
-            titleId="about.message.title"
-            bodyId="about.message.body"
-            imageSrc={about.imageUrl}
-            imageAltId="about.message.imageAlt"
+            title={mission.title}
+            body={mission.body}
+            imageSrc={mission.imageUrl}
+            imageAlt={mission.imageAlt}
             icon={Target}
             accent="primary"
             imageFirst

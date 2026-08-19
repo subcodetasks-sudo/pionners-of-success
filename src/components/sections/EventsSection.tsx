@@ -1,21 +1,19 @@
 import { useEffect, useState } from 'react'
 import { ArrowLeft, ArrowRight, CalendarDays, MapPin } from 'lucide-react'
 import { FormattedMessage, useIntl } from 'react-intl'
+import { Link, useLocation } from 'react-router-dom'
 import { Container } from '@/components/layout/Container'
 import { Button } from '@/components/ui/button'
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/components/ui/carousel'
+import { events } from '@/data/events'
+import { DEFAULT_LOCALE, type Locale } from '@/i18n/locales'
+import { getLocalizedPath } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
-
-const items = [
-  { id: 1, image: '/imgs/services/strategic-consulting.webp' },
-  { id: 2, image: '/imgs/services/content-production.webp' },
-  { id: 3, image: '/imgs/services/brand-identity.webp' },
-  { id: 4, image: '/imgs/services/ad-campaigns.webp' },
-  { id: 5, image: '/imgs/services/digital-platforms.webp' },
-] as const
 
 export const EventsSection = () => {
   const intl = useIntl()
+  const { pathname } = useLocation()
+  const locale: Locale = pathname.startsWith('/en') ? 'en' : DEFAULT_LOCALE
   const [api, setApi] = useState<CarouselApi>()
   const isArabic = intl.locale.startsWith('ar')
 
@@ -104,7 +102,7 @@ export const EventsSection = () => {
           className="mt-10 w-full overflow-hidden"
         >
           <CarouselContent className="ml-0 py-3 -ms-4 sm:py-4">
-            {items.map((item) => (
+            {events.map((item) => (
             <CarouselItem
               key={item.id}
               className="group min-w-0 max-w-full basis-full pl-0! ps-4 sm:basis-full md:basis-1/2 lg:basis-1/3"
@@ -113,7 +111,7 @@ export const EventsSection = () => {
                 <div className="relative aspect-4/3 w-full overflow-hidden sm:aspect-5/4">
                   <img
                     src={item.image}
-                    alt={intl.formatMessage({ id: `events.item${item.id}.title` })}
+                    alt={intl.formatMessage({ id: item.titleKey })}
                     className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                   />
                   <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-black/10" />
@@ -125,7 +123,7 @@ export const EventsSection = () => {
                     <div className="inline-flex max-w-full items-center gap-1.5 rounded-full bg-[#f7b500] px-2 py-1 text-[11px] font-semibold text-primary sm:px-2.5 sm:text-xs">
                       <CalendarDays className="h-3.5 w-3.5 shrink-0" />
                       <span className="max-w-28 truncate sm:max-w-36">
-                        <FormattedMessage id={`events.item${item.id}.meta`} />
+                        <FormattedMessage id={item.metaKey} />
                       </span>
                     </div>
                   </div>
@@ -134,11 +132,11 @@ export const EventsSection = () => {
                     <div className="flex min-w-0 items-center gap-1.5 text-[11px] text-white/85 sm:text-xs">
                       <MapPin className="h-3.5 w-3.5 shrink-0" />
                       <span className="truncate">
-                        <FormattedMessage id={`events.item${item.id}.meta`} />
+                        <FormattedMessage id={item.metaKey} />
                       </span>
                     </div>
                     <div className="hidden items-center gap-1.5 sm:flex">
-                      {items.map(({ id }) => (
+                      {events.map(({ id }) => (
                         <span
                           key={id}
                           className={cn(
@@ -153,20 +151,21 @@ export const EventsSection = () => {
 
                 <div className="flex flex-1 flex-col space-y-3 px-4 py-4 text-start sm:px-5">
                   <h3 className="line-clamp-2 text-base font-semibold text-primary sm:text-lg">
-                    <FormattedMessage id={`events.item${item.id}.title`} />
+                    <FormattedMessage id={item.titleKey} />
                   </h3>
                   <p className="line-clamp-2 flex-1 text-sm leading-6 text-tertiary-600">
-                    <FormattedMessage id={`events.item${item.id}.body`} />
+                    <FormattedMessage id={item.bodyKey} />
                   </p>
-                  <Button
-                    type="button"
-                    className="mt-auto h-auto w-fit rounded-full bg-secondary! flex items-center gap-3 py-1.5 ps-4 pe-2 text-xs font-semibold text-white hover:brightness-110 sm:gap-5"
+                  <Link
+                    to={getLocalizedPath(`/events/${item.slug}`, locale)}
+                    className="mt-6 flex h-auto w-fit items-center gap-3 rounded-full bg-secondary! py-1.5 ps-4 pe-2 text-xs font-semibold text-white hover:brightness-110 sm:gap-5"
+                    viewTransition={true}
                   >
                     <FormattedMessage id="events.cta" />
                     <span className="flex size-6 items-center justify-center rounded-full bg-white">
                       <ArrowRight className="size-3 rtl:-rotate-135 ltr:-rotate-45 text-secondary!" />
                     </span>
-                  </Button>
+                  </Link>
                 </div>
               </div>
             </CarouselItem>
