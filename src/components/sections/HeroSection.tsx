@@ -15,6 +15,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { SponsorsSection } from './SponsorsSection';
 const ease = [0.22, 1, 0.36, 1] as const
 
+
+
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 28 },
   visible: {
