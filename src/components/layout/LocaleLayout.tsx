@@ -3,6 +3,7 @@ import { IntlProvider } from 'react-intl'
 import { Outlet, useLocation, useParams } from 'react-router-dom'
 import { Footer } from '@/components/layout/Footer'
 import { Header } from '@/components/layout/Header'
+import { WhatsAppFloatButton } from '@/components/layout/WhatsAppFloatButton'
 import { DEFAULT_LOCALE, isLocale, LOCALE_DIR, type Locale } from '@/i18n/locales'
 import { getMessages } from '@/i18n/messages'
 
@@ -34,6 +35,7 @@ export const LocaleLayout = ({ forcedLocale }: LocaleLayoutProps) => {
           <Outlet />
         </main>
         {isGalleryRoute ? null : <Footer />}
+        <WhatsAppFloatButton />
       </div>
     </IntlProvider>
   )

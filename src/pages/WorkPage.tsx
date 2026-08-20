@@ -118,13 +118,13 @@ export const WorkPage = () => {
   return (
     <div className="bg-white">
       <Container className="py-20">
-        <div className="mx-auto my-10 max-w-3xl text-center">
-          <h1 className="text-4xl font-semibold text-[#0C0A28] sm:text-5xl">{page.title}</h1>
-          <p className="mt-5 text-base leading-8 text-tertiary-600 sm:text-lg">{page.description}</p>
+        <div className="mx-auto my-4 max-w-3xl text-center">
+          <h1 className=" font-semibold text-primary  ">{page.title}</h1>
+          <p className="text-base leading-8 text-tertiary-600 ">{page.description}</p>
         </div>
 
         {page.tabs.length ? (
-          <Tabs key={activeTab} defaultValue={activeTab} className="gap-8">
+          <Tabs key={activeTab} defaultValue={activeTab} className="gap-4">
             <TabsList className="mx-auto">
               {page.tabs.map((tab) => {
                 const Icon = tab.icon
@@ -138,17 +138,17 @@ export const WorkPage = () => {
             </TabsList>
 
             {page.tabs.map((tab) => {
-              const Icon = tab.icon
+            
               return (
-                <TabsContent key={tab.id} value={tab.id} className="mt-2">
-                  <article className="rounded-[32px] border border-primary-100 bg-neutral-50/70 p-6 sm:p-8">
-                    <div className="mx-auto mb-8 max-w-2xl text-center">
+                <TabsContent key={tab.id} value={tab.id} className="">
+                  <article className="rounded-[32px] border border-primary-100 bg-neutral-50/70 p-6 sm:p-4">
+                    {/* <div className="mx-auto mb-8 max-w-2xl text-center">
                       <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-2xl bg-secondary/10 text-secondary-700">
                         <Icon className="size-6" />
                       </div>
                       <h2 className="text-2xl font-semibold text-[#0C0A28] sm:text-3xl">{tab.title}</h2>
                       <p className="mt-3 text-base leading-8 text-tertiary-600">{tab.description}</p>
-                    </div>
+                    </div> */}
 
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                       {tab.images.map((image) => (

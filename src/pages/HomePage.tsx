@@ -11,7 +11,7 @@ export const HomePage = () => {
       <HeroSection />
       {/* <SponsorsSection /> */}
       <AboutSection />
-      <ServicesSection limit={4} />
+      <ServicesSection  />
       <UspSection />
       <EventsSection />
       <FeedbackTextSection />

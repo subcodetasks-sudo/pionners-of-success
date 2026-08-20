@@ -1,161 +1,56 @@
-import { FormattedMessage, useIntl } from 'react-intl'
+import { useEffect, useState } from 'react'
+import { FormattedMessage } from 'react-intl'
 import { Link, useLocation, useParams } from 'react-router-dom'
-import { ArrowLeft, ArrowRight, CalendarDays, CheckCircle2, MapPin, Sparkles } from 'lucide-react'
+import { ArrowLeft, ArrowRight, CalendarDays, MapPin } from 'lucide-react'
 import { Container } from '@/components/layout/Container'
-import { getEventBySlug } from '@/data/events'
+import { EventMediaCarousel } from '@/components/EventMediaCarousel'
 import { DEFAULT_LOCALE, type Locale } from '@/i18n/locales'
 import { getLocalizedPath } from '@/i18n/navigation'
-
-const extraContent = {
-  ar: {
-    'leading-through-change': {
-      overview:
-        'ورشة عملية تساعد القادة على إدارة التحوّل بوضوح، وبناء لغة مشتركة داخل الفرق، واتخاذ قرارات أسرع دون إضعاف الثقة أو جودة التنفيذ.',
-      agenda: [
-        'تشخيص أنماط المقاومة داخل الفريق وتحديد أولويات التغيير.',
-        'أدوات عملية لإدارة الاجتماعات والرسائل خلال مراحل التحوّل.',
-        'خطة متابعة أسبوعية تساعد القائد على تثبيت السلوك الجديد.',
-      ],
-      audience: [
-        'مديرو الإدارات وقادة الفرق الذين يقودون تحوّلًا تشغيليًا أو تنظيميًا.',
-        'مسؤولو الموارد البشرية والتطوير المؤسسي الداعمون لرحلة التغيير.',
-      ],
-    },
-    'coaching-clinic': {
-      overview:
-        'جلسة تدريب حيّة تركز على تحسين الحوار الفردي داخل المؤسسة، من خلال نماذج أسئلة أوضح، واستماع أعمق، ومتابعة نتائج قابلة للقياس.',
-      agenda: [
-        'ممارسة حية لجلسات كوتشينغ قصيرة مع تغذية راجعة فورية.',
-        'إطار عمل بسيط لتحويل الاجتماع الفردي إلى اتفاق تنفيذي.',
-        'أخطاء شائعة في الكوتشينغ الداخلي وكيفية تجنّبها.',
-      ],
-      audience: [
-        'الكوتشز الداخليون ومديرو الفرق الذين يعقدون اجتماعات فردية منتظمة.',
-        'قادة يرغبون في رفع جودة المتابعة دون تحويل الجلسة إلى تقييم رسمي.',
-      ],
-    },
-    'pioneers-forum': {
-      overview:
-        'يوم مجتمعي يجمع الخريجين والشركاء لتبادل التجارب، ومناقشة حالات واقعية، وبناء علاقات مهنية تدعم النمو المشترك.',
-      agenda: [
-        'حوارات قصيرة حول تجارب نجاح وتحديات السوق.',
-        'دوائر أقران مركزة حسب التخصص أو القطاع.',
-        'نقاش حالات عملية واستخلاص دروس قابلة للتطبيق.',
-      ],
-      audience: [
-        'خريجو برامج روّاد النجاح والشركاء الحاليون.',
-        'المهنيون الباحثون عن شبكة علاقات أعمق داخل السوق.',
-      ],
-    },
-    'creative-campaign-lab': {
-      overview:
-        'مختبر تطبيقي لبناء حملة أوضح من الفكرة حتى القياس، مع التركيز على الرسالة، والجمهور، والقنوات، ومؤشرات الأداء.',
-      agenda: [
-        'تفكيك الهدف التجاري وتحويله إلى فكرة حملة قابلة للتنفيذ.',
-        'بناء هيكل الرسالة والمحتوى عبر القنوات الأساسية.',
-        'تحديد مؤشرات المتابعة وأسلوب قراءة النتائج بعد الإطلاق.',
-      ],
-      audience: [
-        'فرق التسويق والإبداع المسؤولة عن إطلاق الحملات.',
-        'أصحاب العلامات الذين يريدون حملة أكثر وضوحًا وتأثيرًا.',
-      ],
-    },
-    'designing-digital-platforms': {
-      overview:
-        'يوم مكثف يساعد فرق التسويق والمنتج على تحسين التجربة الرقمية وربطها برسائل العلامة، من الصفحة الأولى حتى مسار التحويل.',
-      agenda: [
-        'مراجعة سريعة لرحلة المستخدم ونقاط التسرّب.',
-        'إعادة ترتيب المحتوى والرسائل بما يخدم هدف المنصة.',
-        'توصيات عملية لتحسين التحويل دون تعقيد التجربة.',
-      ],
-      audience: [
-        'فرق التسويق الرقمي والمنتج وإدارة المحتوى.',
-        'المؤسسات التي تعيد بناء موقعها أو تطبيقها أو منصاتها الاجتماعية.',
-      ],
-    },
-  },
-  en: {
-    'leading-through-change': {
-      overview:
-        'A practical workshop that helps leaders run change with more clarity, a shared team language, and faster decisions without losing trust or execution quality.',
-      agenda: [
-        'Diagnose resistance patterns and set change priorities.',
-        'Practical tools for meetings and messaging during transformation.',
-        'A weekly follow-up plan that helps lock in new leadership habits.',
-      ],
-      audience: [
-        'Department heads and team leads running operational or organizational change.',
-        'HR and organizational development partners supporting the change journey.',
-      ],
-    },
-    'coaching-clinic': {
-      overview:
-        'A live practice session focused on better 1:1 conversations: clearer questions, deeper listening, and follow-up that actually moves work forward.',
-      agenda: [
-        'Live coaching drills with immediate feedback.',
-        'A simple framework that turns a 1:1 into a clear agreement.',
-        'Common internal-coaching mistakes and how to avoid them.',
-      ],
-      audience: [
-        'Internal coaches and team leads who run regular 1:1s.',
-        'Leaders who want better follow-up without turning the session into a formal review.',
-      ],
-    },
-    'pioneers-forum': {
-      overview:
-        'A community day for alumni and partners to exchange experience, discuss real cases, and grow a professional network that supports shared progress.',
-      agenda: [
-        'Short conversations on market challenges and success stories.',
-        'Peer circles grouped by discipline or sector.',
-        'Case discussions with practical takeaways.',
-      ],
-      audience: [
-        'Pioneers of Success alumni and current partners.',
-        'Professionals looking for a deeper market network.',
-      ],
-    },
-    'creative-campaign-lab': {
-      overview:
-        'A hands-on lab for building a clearer campaign from idea to measurement, covering message, audience, channels, and performance indicators.',
-      agenda: [
-        'Turn the business goal into a campaign idea that can actually ship.',
-        'Shape the message and content structure across core channels.',
-        'Define tracking metrics and how results will be read after launch.',
-      ],
-      audience: [
-        'Marketing and creative teams responsible for campaign launches.',
-        'Brand owners who want a clearer, more effective campaign.',
-      ],
-    },
-    'designing-digital-platforms': {
-      overview:
-        'An intensive day for marketing and product teams to improve the digital experience and connect it to brand messaging, from first screen to conversion.',
-      agenda: [
-        'A fast review of the user journey and drop-off points.',
-        'Reorder content and messaging around the platform goal.',
-        'Practical conversion improvements that do not overcomplicate the experience.',
-      ],
-      audience: [
-        'Digital marketing, product, and content teams.',
-        'Organizations rebuilding a website, app, or social platform presence.',
-      ],
-    },
-  },
-} as const
+import { fetchEventContent, type EventContent } from '@/lib/content'
 
 export const EventDetailPage = () => {
-  const intl = useIntl()
-  const { slug } = useParams()
+  const { slug: id } = useParams()
   const { pathname } = useLocation()
   const locale: Locale = pathname.startsWith('/en') ? 'en' : DEFAULT_LOCALE
-  const event = getEventBySlug(slug)
-  const details =
-    event && event.slug in extraContent[locale]
-      ? extraContent[locale][event.slug as keyof typeof extraContent.ar]
-      : null
+
+  const [event, setEvent] = useState<EventContent | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
   const eventsHome = `${getLocalizedPath('/', locale)}#events`
 
-  if (!event || !details) {
+  useEffect(() => {
+    if (!id) {
+      setEvent(null)
+      setIsLoading(false)
+      return
+    }
+
+    let cancelled = false
+    setIsLoading(true)
+
+    fetchEventContent(id)
+      .then((data) => {
+        if (cancelled) return
+        setEvent(data)
+      })
+      .catch((error) => {
+        console.error('Error fetching event:', error)
+        if (!cancelled) setEvent(null)
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [id, locale])
+
+  if (isLoading) {
+    return <Container className="py-20">{null}</Container>
+  }
+
+  if (!event) {
     return (
       <Container className="py-20 text-center">
         <h1 className="text-3xl text-primary">
@@ -167,6 +62,24 @@ export const EventDetailPage = () => {
       </Container>
     )
   }
+
+  const coverMedia = event.image_url
+    ? [
+        {
+          id: -1,
+          event_id: event.id,
+          type: 'image' as const,
+          description: null,
+          video_url: null,
+          file_url: event.image_url,
+          thumb_url: event.thumb_url || event.image_url,
+          files: [],
+          order: -1,
+          lang: event.lang,
+        },
+      ]
+    : []
+  const galleryMedia = [...coverMedia, ...(event.media ?? [])]
 
   return (
     <Container className="py-20">
@@ -181,84 +94,82 @@ export const EventDetailPage = () => {
 
       <section className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
         <article className="text-start">
-          <div className="inline-flex items-center gap-2 rounded-full bg-secondary/10 px-3 py-1 text-xs font-semibold tracking-[0.16em] text-secondary-700 uppercase">
-            <Sparkles className="h-3.5 w-3.5" />
-            <FormattedMessage id="events.kicker" />
-          </div>
-
-          <h1 className="mt-4 text-4xl font-semibold text-[#0C0A28] sm:text-5xl">
-            <FormattedMessage id={event.titleKey} />
-          </h1>
 
           <div className="mt-5 flex flex-wrap items-center gap-3 text-sm font-medium text-tertiary-700">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-[#f7b500] px-3 py-1 text-primary">
               <CalendarDays className="h-4 w-4" />
-              <FormattedMessage id={event.metaKey} />
+              {event.event_date}
             </span>
-            <span className="inline-flex items-center gap-1.5">
-              <MapPin className="h-4 w-4 text-secondary-600" />
-              <FormattedMessage id={event.metaKey} />
-            </span>
+            {event.location && (
+              <span className="inline-flex items-center gap-1.5">
+                <MapPin className="h-4 w-4 text-secondary-600" />
+                {event.location}
+              </span>
+            )}
           </div>
+          <h1 className="mt-4 text-4xl font-semibold text-[#0C0A28] sm:text-5xl">{event.title}</h1>
 
-          <p className="mt-5 text-lg leading-8 text-tertiary-600">
-            <FormattedMessage id={event.bodyKey} />
-          </p>
 
-          <div className="mt-8 space-y-3 rounded-[28px] border border-primary-100 bg-white p-6 shadow-[0_18px_45px_rgba(12,10,40,0.06)]">
-            <h2 className="text-lg font-semibold text-[#0C0A28]">
-              <FormattedMessage id="events.detail.overview" />
-            </h2>
-            <p className="text-sm leading-7 text-tertiary-700">{details.overview}</p>
-          </div>
+          {event.description && (
+            <p className="mt-5 text-lg leading-8 text-tertiary-600">{event.description}</p>
+          )}
+
+          {event.cta_url && (
+            <a
+              href={event.cta_url}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-8 inline-flex items-center gap-3 rounded-full bg-secondary py-2.5 ps-5 pe-2.5 text-sm font-semibold text-white transition hover:brightness-110"
+            >
+              <FormattedMessage id="events.cta" />
+              <span className="flex size-7 items-center justify-center rounded-full bg-white">
+                <ArrowRight className="size-3.5 rtl:-rotate-135 ltr:-rotate-45 text-secondary!" />
+              </span>
+            </a>
+          )}
         </article>
 
         <div className="overflow-hidden rounded-[32px] border border-primary-100 bg-white shadow-[0_22px_60px_rgba(12,10,40,0.08)]">
-          <div className="relative aspect-[1.15/1] overflow-hidden">
-            <img
-              src={event.image}
-              alt={intl.formatMessage({ id: event.titleKey })}
-              className="h-full w-full object-cover"
-            />
-            <div className="absolute inset-0 bg-linear-to-t from-primary/75 via-primary/10 to-transparent" />
-          </div>
+          <EventMediaCarousel media={galleryMedia} fallbackImage={event.image_url} title={event.title} />
         </div>
       </section>
 
-      <section className="mt-16 grid gap-6 lg:grid-cols-2">
-        <div className="rounded-[28px] border border-primary-100 bg-white p-6 shadow-[0_18px_45px_rgba(12,10,40,0.06)] sm:p-8">
+      {galleryMedia.length > 1 && (
+        <section className="mt-16">
           <h2 className="text-2xl font-semibold text-[#0C0A28]">
-            <FormattedMessage id="events.detail.agenda" />
+            <FormattedMessage id="events.detail.overview" />
           </h2>
-          <div className="mt-6 space-y-4">
-            {details.agenda.map((item, index) => (
-              <div key={item} className="flex gap-4 rounded-[22px] bg-white p-4 ring-1 ring-primary-100">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary text-sm font-semibold text-white">
-                  {index + 1}
-                </div>
-                <p className="text-sm leading-7 text-tertiary-700">{item}</p>
+          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {galleryMedia.map((item) => (
+              <div
+                key={item.id}
+                className="relative aspect-square overflow-hidden rounded-[20px] border border-primary-100 bg-white shadow-[0_12px_30px_rgba(12,10,40,0.06)]"
+              >
+                {item.type === 'video' ? (
+                  <video
+                    src={item.file_url}
+                    poster={item.thumb_url}
+                    className="h-full w-full object-cover"
+                    muted
+                    loop
+                    playsInline
+                    autoPlay
+                  />
+                ) : (
+                  <img
+                    src={item.thumb_url || item.file_url}
+                    alt={event.title}
+                    className="h-full w-full object-cover"
+                  />
+                )}
               </div>
             ))}
           </div>
-        </div>
-
-        <div className="rounded-[28px] border border-primary-100 bg-white p-6 shadow-[0_18px_45px_rgba(12,10,40,0.06)] sm:p-8">
-          <h2 className="text-2xl font-semibold text-[#0C0A28]">
-            <FormattedMessage id="events.detail.audience" />
-          </h2>
-          <ul className="mt-6 space-y-3 text-sm text-tertiary-700">
-            {details.audience.map((item) => (
-              <li key={item} className="flex items-start gap-3 rounded-[22px] bg-primary-50/55 p-4">
-                <CheckCircle2 className="mt-0.5 h-4.5 w-4.5 shrink-0 text-secondary-600" />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+        </section>
+      )}
 
       <section className="mt-16 rounded-[32px] border border-primary-100 bg-primary p-8 text-white shadow-[0_24px_60px_rgba(12,10,40,0.16)] sm:p-10">
-        <h2 className="text-2xl font-semibold">
+        <h2 className="text-2xl font-semibold text-white!">
           <FormattedMessage id="events.detail.ctaTitle" />
         </h2>
         <p className="mt-3 max-w-3xl text-primary-100">

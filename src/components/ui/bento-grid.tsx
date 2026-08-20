@@ -63,7 +63,7 @@ const BentoCard = ({
         <h3 className="text-lg font-semibold text-[--color-primary]">
           {name}
         </h3>
-        <p className="max-w-lg text-sm leading-relaxed text-[--color-primary] opacity-70">{description}</p>
+        <p className="max-w-lg text-sm leading-relaxed text-[--color-primary] opacity-70 line-clamp-2">{description}</p>
       </div>
 
       {/* button absolutely positioned at the bottom, hidden until hover */}

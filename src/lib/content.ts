@@ -200,3 +200,115 @@ export const fetchServicesContent = async (): Promise<ServiceContent[] | null> =
   if (!data?.data?.length) return null
   return [...data.data].sort((a, b) => a.order - b.order)
 }
+
+type ServiceDetailResponse = {
+  data: ServiceContent | null
+}
+
+export const fetchServiceContent = async (id: number | string): Promise<ServiceContent | null> => {
+  const { data } = await api.get<ServiceDetailResponse>(`/v1/content/services/${id}`)
+  return data?.data ?? null
+}
+
+
+export type FeedbackContent = {
+  id: number|string
+  author_name : string|null
+  content: string|null
+  rating: number|null
+  avatar_url: string|null
+  background_image_url: string|null
+  order: number
+  lang: string
+}
+
+type FeedbackResponse = {
+  data: FeedbackContent[] | null
+}
+
+export const fetchFeedbackContent = async (): Promise<FeedbackContent[] | null> => {
+  const { data } = await api.get<FeedbackResponse>('/v1/content/testimonials')
+  if (!data?.data?.length) return null
+  return [...data.data].sort((a, b) => a.order - b.order)
+} 
+
+
+export type EventMediaFile = {
+  url: string;
+  thumb_url: string;
+}
+
+export type EventMedia = {
+  id: number;
+  event_id: number;
+  type: "video" | "image";
+  description: string | null;
+  video_url: string | null;
+  file_url: string;
+  thumb_url: string;
+  files: EventMediaFile[];
+  order: number;
+  lang: string;
+}
+
+export type EventContent = {
+  id: number;
+  title: string;
+  description: string;
+  location: string | null;
+  event_date: string;
+  cta_url: string;
+  image_url: string;
+  thumb_url: string;
+  order: number;
+  lang: string;
+  media: EventMedia[];
+}
+
+type EventResponse = {
+  data: {
+    items: EventContent[] | null
+    lang: string
+  }
+}
+
+export const fetchEventsContent = async (): Promise<EventContent[] | null> => {
+  const { data } = await api.get<EventResponse>('/v1/content/events')
+  if (!data?.data?.items?.length) return null
+  return [...data.data.items].sort((a, b) => a.order - b.order)
+}
+
+type EventDetailResponse = {
+  data: EventContent | null
+}
+
+export const fetchEventContent = async (id: number | string): Promise<EventContent | null> => {
+  const { data } = await api.get<EventDetailResponse>(`/v1/content/events/${id}`)
+  if (!data?.data) return null
+  return {
+    ...data.data,
+    media: [...(data.data.media ?? [])].sort((a, b) => a.order - b.order),
+  }
+}
+
+export type ContactContent = {
+  id: number
+  email: string | null
+  phone: string | null
+  address: string | null
+  facebook: string | null
+  instagram: string | null
+  twitter: string | null
+  linkedin: string | null
+  whatsapp: string | null
+  lang: string
+}
+
+type ContactResponse = {
+  data: ContactContent | null
+}
+
+export const fetchContactContent = async (): Promise<ContactContent | null> => {
+  const { data } = await api.get<ContactResponse>('/v1/content/contact')
+  return data?.data ?? null
+}

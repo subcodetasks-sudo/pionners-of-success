@@ -108,28 +108,27 @@ export const SponsorsSection = () => {
 
   return (
     <section ref={sectionRef} className="overflow-hidden   pt-6">
-      {/* <Container>
-        <SectionHeading kicker="sponsors.kicker" title="sponsors.title" />
-      </Container> */}
-      <div className="mt-10">
-        {/* <LogoLoop
-          logos={logos}
-          speed={40}
-          direction={isRtl ? 'right' : 'left'}
-          logoHeight={60}
-          gap={50}
-          fadeOut
-          fadeOutColor="#ffffff"
-          scaleOnHover
-          pauseOnHover
-          ariaLabel="Sponsors"
-        /> */}
+
+      <div className="my-10">
+
         <div dir="ltr" className="relative flex w-full flex-row items-center justify-center overflow-hidden">
-      <Marquee pauseOnHover  className="[--duration:90s]">
-        {logos?.map((logo ) => (
-          <img key={logo.id} src={logo.src}  className="w-20 h-20 object-contain" />
-        ))}
-      </Marquee>
+        <Marquee pauseOnHover className="[--duration:90s]">
+  {logos?.map((logo) => (
+    <a
+      href={logo.href || ""}
+      target="_blank"
+      rel="noopener noreferrer"
+      key={logo.id}
+      className="flex w-32 h-24 items-center justify-center shrink-0"
+    >
+      <img
+        src={logo.src}
+        alt=""
+        className="w-full h-full object-contain"
+      />
+    </a>
+  ))}
+</Marquee>
       <div className="from-background pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r"></div>
       <div className="from-background pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l"></div>
     </div>

@@ -14,7 +14,7 @@ import {
     MonitorSmartphone,
     Users,
 } from 'lucide-react';
-import { motion, useMotionTemplate, useMotionValue, useReducedMotion, type Variants } from 'motion/react';
+import { motion, useMotionTemplate, useMotionValue, type Variants } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Link, useLocation } from 'react-router-dom';
@@ -37,13 +37,6 @@ const cardVariants: Variants = {
     opacity: 1,
     y: 0,
     transition: { duration: 0.55, ease },
-  },
-}
-
-const stagger: Variants = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.11, delayChildren: 0.06 },
   },
 }
 
@@ -139,35 +132,49 @@ const ServiceCardWrapper = ({ index, service, href, cta }: ServiceCardWrapperPro
 }
 
 type ServicesSectionProps = {
-  limit?: number
   showViewAll?: boolean
 }
 
-export const ServicesSection = ({ limit, showViewAll = true }: ServicesSectionProps) => {
+export const ServicesSection = ({ showViewAll = true }: ServicesSectionProps) => {
   const { pathname } = useLocation()
   const intl = useIntl()
+  
   const locale: Locale = pathname.startsWith('/en') ? 'en' : DEFAULT_LOCALE
-  const reduceMotion = useReducedMotion()
+  
   const cta = intl.formatMessage({ id: 'services.viewDetails' })
-  const [services, setServices] = useState<ServiceView[]>([]);
+  
+  const [services, setServices] = useState<ServiceView[]>([])
+  
+  const isServicesPage = pathname.endsWith('/services')
+  
+  const displayedServices = isServicesPage
+    ? services
+    : services.slice(0, 4)
 
 
 
-  useEffect(() => {
-    fetchServicesContent().then(data => {
-      if (!data) return
-      setServices(data.map(service => ({
-        id: service.id,
-        title: service.title,
-        description: service.description,
-        icon: service.icon,
-        image_url: service.image_url,
-        order: service.order,
-      })))
-    }).catch(error => {
-      console.error('Error fetching services:', error)
-    })
-  }, [])
+    useEffect(() => {
+      fetchServicesContent()
+        .then((data) => {
+          console.log('Services data:', data)
+    
+          if (!data) return
+    
+          setServices(
+            data.map((service) => ({
+              id: service.id,
+              title: service.title,
+              description: service.description,
+              icon: service.icon,
+              image_url: service.image_url,
+              order: service.order,
+            }))
+          )
+        })
+        .catch((error) => {
+          console.error('Error fetching services:', error)
+        })
+    }, [locale])
 
   return (
     <section id="services" className="scroll-mt-30 bg-white pt-24 pb-18">
@@ -178,39 +185,19 @@ export const ServicesSection = ({ limit, showViewAll = true }: ServicesSectionPr
           subtitle="services.subtitle"
         />
 
-        <motion.div
-          initial={reduceMotion ? false : 'hidden'}
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.08 }}
-          variants={stagger}
-        >
-          {limit ? (
-          <BentoGrid className="auto-rows-auto items-stretch">
-            {services.length > 0 && services.slice(0, limit).map((service, i) => (
-              <ServiceCardWrapper
-                key={service.id}
-                index={i}
-                service={service}
-                href={getLocalizedPath(`/services/${service.id}`, locale)}
-                cta={cta}
-              />
-            ))}
-          </BentoGrid>
-          )
-        : (
-          <BentoGrid className="auto-rows-auto items-stretch">
-            {services.length > 0 && services?.map((service, i) => (
-              <ServiceCardWrapper
-                key={service.id}
-                index={i}
-                service={service}
-                href={getLocalizedPath(`/services/${service.id}`, locale)}
-                cta={cta}
-              />
-            ))}
-          </BentoGrid>
-        )}
-        </motion.div>
+<div>
+  <BentoGrid className="auto-rows-auto items-stretch">
+    {displayedServices.map((service, i) => (
+      <ServiceCardWrapper
+        key={service.id}
+        index={i}
+        service={service}
+        href={getLocalizedPath(`/services/${service.id}`, locale)}
+        cta={cta}
+      />
+    ))}
+  </BentoGrid>
+</div>
 
         {showViewAll ? (
           <div className="mt-10 flex justify-center">

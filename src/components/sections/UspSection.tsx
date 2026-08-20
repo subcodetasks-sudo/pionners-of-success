@@ -5,8 +5,9 @@ import { useIntl } from 'react-intl'
 import { Container } from '@/components/layout/Container'
 import { fetchAdvantagesContent } from '@/lib/content'
 import { cn } from '@/lib/utils'
+import { useLocation } from 'react-router-dom';
+import { DEFAULT_LOCALE, type Locale } from '@/i18n/locales';
 
-const fallbackImage = '/imgs/services/strategic-consulting.webp'
 const ease = [0.22, 1, 0.36, 1] as const
 
 const fadeUp: Variants = {
@@ -41,22 +42,14 @@ type UspView = {
 export const UspSection = () => {
   const intl = useIntl()
   const reduceMotion = useReducedMotion()
+  const { pathname } = useLocation()
+  const locale: Locale = pathname.startsWith('/en') ? 'en' : DEFAULT_LOCALE
 
-  const fallback: UspView = {
-    kicker: intl.formatMessage({ id: 'usp.kicker' }),
-    title: intl.formatMessage({ id: 'usp.title' }),
-    body: intl.formatMessage({ id: 'usp.item1.body' }),
-    imageUrl: fallbackImage,
-    items: [1, 2, 3, 4].map((n) => ({
-      title: intl.formatMessage({ id: `usp.item${n}.title` }),
-      body: intl.formatMessage({ id: `usp.item${n}.body` }),
-    })),
-  }
 
-  const [usp, setUsp] = useState<UspView>(fallback)
+  const [usp, setUsp] = useState<UspView | null>(null)
 
   useEffect(() => {
-    setUsp(fallback)
+    setUsp(null)
 
     let cancelled = false
 
@@ -65,28 +58,29 @@ export const UspSection = () => {
         if (cancelled || !data) return
 
         setUsp({
-          kicker: data.kicker?.trim() || fallback.kicker,
-          title: data.title?.trim() || fallback.title,
-          body: data.content?.trim() || fallback.body,
-          imageUrl: data.image_url?.trim() || fallback.imageUrl,
+          kicker: data.kicker?.trim() ,
+          title: data.title?.trim() ,
+          body: data.content?.trim(),
+          imageUrl: data.image_url?.trim() ,
           items: data.items?.length
-            ? data.items.map((item, index) => ({
-                title: item.title?.trim() || fallback.items[index]?.title || '',
-                body: item.content?.trim() || fallback.items[index]?.body || '',
+            ? data.items.map((item) => ({
+                title: item.title?.trim()  || '',
+                body: item.content?.trim() ||  '',
               }))
-            : fallback.items,
+            : []
         })
       })
       .catch(() => {
-        if (!cancelled) setUsp(fallback)
+        if (!cancelled) setUsp(null)
       })
 
     return () => {
       cancelled = true
     }
-  }, [intl])
+  }, [intl , locale])
 
   return (
+    usp ? (
     <section className="relative overflow-hidden bg-primary py-18 text-white">
       <div
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(17,144,207,0.3),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.1),transparent_24%)]"
@@ -141,12 +135,17 @@ export const UspSection = () => {
           <motion.div className="grid auto-rows-fr gap-4 sm:grid-cols-2" variants={stagger}>
             {usp.items.map((item, index) => (
               <motion.div
+              initial={{ opacity: 0, y: 28 }}
+              whileInView={reduceMotion ? undefined : { opacity: 1, y: 0  }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ duration: 0.55, ease  ,delay: index * 0.1}}
+
                 key={`${item.title}-${index}`}
                 className={cn(
                   'group relative flex h-full flex-col overflow-hidden rounded-[24px] border border-white/12 bg-white/8 p-6 shadow-[0_20px_40px_rgba(0,0,0,0.14)] backdrop-blur-sm transition-transform duration-300 hover:-translate-y-1',
                   'before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-linear-to-r before:from-transparent before:via-white/60 before:to-transparent before:content-[""]',
                 )}
-                variants={fadeUp}
+
               >
                 <div className="mb-5 flex items-center justify-between gap-3">
                   <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-secondary/18 text-secondary-100 ring-1 ring-white/10">
@@ -163,6 +162,7 @@ export const UspSection = () => {
           </motion.div>
         </motion.div>
       </Container>
-    </section>
+    </section>):
+    null
   )
 }
