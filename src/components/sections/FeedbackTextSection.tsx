@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from '@/components/ui/carousel'
 import { cn } from '@/lib/utils'
 import { fetchFeedbackContent, type FeedbackContent } from '@/lib/content';
-import logo from '@/assets/logo.webp'
+import logo from '@/assets/Logo.webp'
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '../ui/dialog';
 import { useLocation } from 'react-router-dom';
 import { DEFAULT_LOCALE, type Locale } from '@/i18n/locales';
