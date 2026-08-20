@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react'
+import { useEffect, useLayoutEffect } from 'react'
 import { IntlProvider } from 'react-intl'
 import { Outlet, useLocation, useParams } from 'react-router-dom'
 import { Footer } from '@/components/layout/Footer'
@@ -22,9 +22,34 @@ type LocaleLayoutProps = {
 
 export const LocaleLayout = ({ forcedLocale }: LocaleLayoutProps) => {
   const { locale: paramLocale } = useParams()
-  const { pathname } = useLocation()
+  const { pathname, hash } = useLocation()
   const activeLocale: Locale = forcedLocale || (isLocale(paramLocale) ? paramLocale : DEFAULT_LOCALE)
   const isGalleryRoute = pathname.includes('/gallery')
+
+  // Scroll to hash section after every navigation (React Router v6 doesn't do this natively).
+  // Retries for up to ~1 s to handle sections that mount asynchronously after data fetches.
+  useEffect(() => {
+    if (!hash) {
+      window.scrollTo({ top: 0, behavior: 'auto' })
+      return
+    }
+    const id = hash.slice(1) // strip leading '#'
+    let attempts = 0
+    const maxAttempts = 20
+
+    const tryScroll = () => {
+      const el = document.getElementById(id)
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        return
+      }
+      if (++attempts < maxAttempts) {
+        setTimeout(tryScroll, 50)
+      }
+    }
+
+    tryScroll()
+  }, [pathname, hash])
 
   return (
     <IntlProvider locale={activeLocale} messages={getMessages(activeLocale)} defaultLocale={DEFAULT_LOCALE}>

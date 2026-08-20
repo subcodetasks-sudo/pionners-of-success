@@ -16,9 +16,9 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
-import { services } from '@/data/services'
 import { DEFAULT_LOCALE, type Locale } from '@/i18n/locales'
 import { getLocalizedPath } from '@/i18n/navigation'
+import { fetchServicesContent, type ServiceContent } from '@/lib/content'
 import { cn } from '@/lib/utils'
 
 const sectionIds = ['home', 'about', 'services', 'events', 'feedback'] as const
@@ -54,6 +54,7 @@ export const Header = () => {
   const isWorkRoute = pathname.includes('/work')
   const [activeSection, setActiveSection] = useState<SectionId>(isServicesRoute ? 'services' : 'home')
   const [servicesMenuOpen, setServicesMenuOpen] = useState(false)
+  const [apiServices, setApiServices] = useState<ServiceContent[]>([])
   const cardNavItems = useMemo(
     () => [
       {
@@ -61,10 +62,10 @@ export const Header = () => {
         bgColor: '#1190CF',
         textColor: '#ffffff',
         links: [
-          ...services.slice(0, 4).map((service) => ({
-            label: intl.formatMessage({ id: service.titleKey }),
-            href: getLocalizedPath(`/services/${service.slug}`, currentLocale),
-            ariaLabel: intl.formatMessage({ id: service.titleKey }),
+          ...apiServices.slice(0, 4).map((service) => ({
+            label: service.title,
+            href: getLocalizedPath(`/services/${service.id}`, currentLocale),
+            ariaLabel: service.title,
           })),
           {
             label: intl.formatMessage({ id: 'services.viewAll' }),
@@ -74,7 +75,7 @@ export const Header = () => {
         ],
       },
     ],
-    [currentLocale, intl],
+    [currentLocale, intl, apiServices],
   )
   const cardNavPlainLinks = useMemo(
     () => [
@@ -111,6 +112,20 @@ export const Header = () => {
     ],
     [currentLocale, intl],
   )
+
+  useEffect(() => {
+    let cancelled = false
+    fetchServicesContent()
+      .then((data) => {
+        if (!cancelled && data) setApiServices(data)
+      })
+      .catch((err) => {
+        console.error('Failed to fetch services for header:', err)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [currentLocale])
 
   useEffect(() => {
     const elements = sectionIds
@@ -270,14 +285,14 @@ export const Header = () => {
                             </NavigationMenuLink>
                           </li>
 
-                          {services.map((service) => (
-                            <li key={service.slug}>
+                          {apiServices.map((service) => (
+                            <li key={service.id}>
                               <NavigationMenuLink
                                 closeOnClick
                                 render={
                                   <Link
                                     to={getLocalizedPath(
-                                      `/services/${service.slug}`,
+                                      `/services/${service.id}`,
                                       currentLocale,
                                     )}
                                     viewTransition={true}
@@ -286,11 +301,11 @@ export const Header = () => {
                                 className="flex-col items-start gap-0.5"
                               >
                                 <span className="font-medium text-primary">
-                                  <FormattedMessage id={service.titleKey} />
+                                  {service.title}
                                 </span>
 
                                 <span className="text-xs text-tertiary-600">
-                                  <FormattedMessage id={service.summaryKey} />
+                                  {service.description}
                                 </span>
                               </NavigationMenuLink>
                             </li>
